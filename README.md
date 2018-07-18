@@ -38,7 +38,7 @@ Note that the order matters. **Audio Source** must come before **Lib Pd Instance
 
 The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your PD patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
 
-See the sister project [LibPdIntegrationExamples](../LibPdIntegrationExamples) and the comments in [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs) for more information, including how to communicate between Unity and libpd.
+See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) and the comments in [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs) for more information, including how to communicate between Unity and libpd.
 
 ## Spatialisation
 
@@ -48,7 +48,7 @@ The first thing to note is that, by default, Unity only spatialises **Audio Sour
 
 After adding an **Audio Source** and **Lib Pd Instance** to a GameObject in your scene, the steps you'll need to take to spatialise your PD patch are:
 
-1. Set the **Audio Source's** **AudioClip** to the [SpatialiserFix.wav](extra/SpatialiserFix.wav) file included in this repository. This is a short file containing a constant dc value of +1, so it should not be played through speakers. We're using it solely to send a signal to our PD patch. See [FilteredNoise.pd](../LibPdIntegrationExamples/Assets/StreamingAssets/PdAssets/SpatialisationPatches) in [LibPdIntegrationExamples](../LibPdIntegrationExamples) for a detailed explanation.
+1. Set the **Audio Source's** **AudioClip** to the [SpatialiserFix.wav](extras/SpatialiserFix.wav) file included in this repository. This is a short file containing a constant dc value of +1, so it should not be played through speakers. We're using it solely to send a signal to our PD patch. See [FilteredNoise.pd](https://github.com/LibPdIntegration/LibPdIntegrationExamples/Assets/StreamingAssets/PdAssets/SpatialisationPatches) in [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) for a detailed explanation.
 ![Spatialisation Inspector Audio Clip Setting](/docs/images/spatialiserfix-audioclip.png)
 
 2. Set the **Audio Source** to **Play On Awake** and **Loop**.
@@ -71,7 +71,7 @@ To use the **OculusSpatializer** plugin, the steps are:
 1. *Edit -> Project Settings... -> Audio*.
 2. Set **Spatializer Plugin** to **OculusSpatializer**.
 
-This will spatialise all audio for you, without any need for the aforementioned [SpatialiserFix.wav](extra/SpatialiserFix.wav) file and **adc~** object in each patch.
+This will spatialise all audio for you, without any need for the aforementioned [SpatialiserFix.wav](extras/SpatialiserFix.wav) file and **adc~** object in each patch.
 
 ## Caveats
 
