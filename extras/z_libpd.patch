@@ -1,0 +1,11 @@
+365a366,375
+> 
+>   //NIALL_EDIT: If we're working in Unity, our print hook disappears when we
+>   //exit the game, but the libpd dll is still active in the editor, and its
+>   //sys_printhook now points to a non-existent function. Unfortunately,
+>   //pd_init() can only be called once, so the next time we start the game it'll
+>   //try to print to that non-existent function.
+> 
+>   //As sys_printhook is set solely in pd_init(), the simplest solution I could
+>   //see was to set sys_printhook directly here.
+>   sys_printhook = libpd_printhook;

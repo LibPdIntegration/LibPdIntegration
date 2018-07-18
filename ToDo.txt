@@ -1,0 +1,9 @@
+LibPdIntegration ToDo
+---------------------
+- printHook deletion in OnApplicationQuit()?
+- Linux build of libpd.
+- Build in my own spatialisation code?
+- Should I separate the LibPD stuff out from the MonoBehaviour?
+    - I do like the single-file approach for a library.
+- More robust Print implementation (let users redirect to their own classes).
+- Use queued version instead?
