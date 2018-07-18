@@ -48,7 +48,7 @@ The first thing to note is that, by default, Unity only spatialises **Audio Sour
 
 After adding an **Audio Source** and **Lib Pd Instance** to a GameObject in your scene, the steps you'll need to take to spatialise your PD patch are:
 
-1. Set the **Audio Source's** **AudioClip** to the [SpatialiserFix.wav](extras/SpatialiserFix.wav) file included in this repository. This is a short file containing a constant dc value of +1, so it should not be played through speakers. We're using it solely to send a signal to our PD patch. See [FilteredNoise.pd](https://github.com/LibPdIntegration/LibPdIntegrationExamples/Assets/StreamingAssets/PdAssets/SpatialisationPatches) in [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) for a detailed explanation.
+1. Set the **Audio Source's** **AudioClip** to the [SpatialiserFix.wav](extras/SpatialiserFix.wav) file included in this repository. This is a short file containing a constant dc value of +1, so it should not be played through speakers. We're using it solely to send a signal to our PD patch. See [FilteredNoise.pd](https://github.com/LibPdIntegration/LibPdIntegrationExamples/tree/master/Assets/StreamingAssets/PdAssets/SpatialisationPatches) in [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) for a detailed explanation.
 ![Spatialisation Inspector Audio Clip Setting](/docs/images/spatialiserfix-audioclip.png)
 
 2. Set the **Audio Source** to **Play On Awake** and **Loop**.
