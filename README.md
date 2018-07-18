@@ -54,7 +54,7 @@ After adding an **Audio Source** and **Lib Pd Instance** to a GameObject in your
 2. Set the **Audio Source** to **Play On Awake** and **Loop**.
 ![Spatialisation Inspector Loop Setting](/docs/images/spatialiserfix-loop.png)
 
-3. Adjust the **Spatial Blend** slider to **1 (3D)**.
+3. Adjust the **Spatial Blend** slider to **1 (3D)**.  
 ![Spatialisation Inspector Spatial Blend Setting](/docs/images/spatialiserfix-spatialblend.png)
 
 4. In your PD patch, multiply the 2 outputs of an **adc~** object by the output of your patch before feeding it to the **dac~** object.
