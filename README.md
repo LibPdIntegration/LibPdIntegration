@@ -38,7 +38,7 @@ Note that the order matters. **Audio Source** must come before **Lib Pd Instance
 
 The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your PD patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
 
-See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) and the comments in [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs) for more information, including how to communicate between Unity and libpd.
+See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) and the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki) for more information, including how to communicate between Unity and libpd.
 
 ## Spatialisation
 
