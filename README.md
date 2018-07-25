@@ -26,14 +26,13 @@ This repository contains everything you need to incorporate PD patches into your
 
 PD patches should be placed in the [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder (you can create your own subfolders within).
 
-To associate a PD patch with a Unity GameObject, you'll need to add 2 Components to the GameObject:
+To associate a PD patch with a Unity GameObject, you need to add a single **Lib Pd Instance** Component to the GameObject. Doing this will also add an **Audio Source** Component; this is necessary because Unity does not process audio for GameObjects without an Audio Source.
 
-1. **Audio Source:** This is necessary because Unity does not process audio for GameObjects without an Audio Source.
+**Lib Pd Instance** is our wrapper for libpd. To associate a PD patch with it, drag the patch from your [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder to the **Patch** selector in the Inspector.
 
-2. **Lib Pd Instance:** Our wrapper for libpd. To associate a PD patch with it, drag the patch from your [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder to the **Patch** selector in the Inspector.
 ![LibPdInstance Inspector Patch Selector](docs/images/libpdinstance-patch.png)
 
-Note that the order matters. **Audio Source** must come before **Lib Pd Instance**.
+Note that the order of Components matters. **Audio Source** must come before **Lib Pd Instance**.
 
 The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your PD patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
 

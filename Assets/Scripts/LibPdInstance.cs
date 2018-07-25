@@ -108,6 +108,7 @@ public class IntIntEvent : UnityEvent<int, int> {}
 /// change in future.
 /// 
 /// </remarks>
+[RequireComponent(typeof(AudioSource))]
 public class LibPdInstance : MonoBehaviour {
 
 	#region libpd imports
@@ -430,6 +431,13 @@ public class LibPdInstance : MonoBehaviour {
 
 	/// Global variable used to ensure we don't initialise LibPd more than once.
 	private static bool pdInitialised = false;
+
+	/// Holds any actions (events) sent from the audio thread.
+	private List<System.Action> audioThreadActions = new List<System.Action>();
+	/// Holds any actions (events) that have been copied over into the main thread to execute.
+	private List<System.Action> mainThreadActions = new List<System.Action>();
+	/// True if there are audioThreadActions pending.
+	private volatile bool actionsPending = false;
 	#endregion
 
 	#region events
@@ -639,6 +647,29 @@ public class LibPdInstance : MonoBehaviour {
 	}
 	
 	//--------------------------------------------------------------------------
+	/// We use this to dispatch any events that we've been sent from libpd.
+	/// Any send/MIDI events sent from libpd will be sent from the audio thread,
+	/// so we have to queue them and send them from the main thread, or Unity
+	/// will get very upset.
+	public void Update() {
+		if(actionsPending) {
+			mainThreadActions.Clear();
+
+			//Copy events queued from audio thread.
+			lock(audioThreadActions) {
+				mainThreadActions.AddRange(audioThreadActions);
+
+				audioThreadActions.Clear();
+				actionsPending = false;
+			}
+
+			//Dispatch events on main thread.
+			for(int i=0;i<mainThreadActions.Count;++i)
+				mainThreadActions[i].Invoke();
+		}
+	}
+	
+	//--------------------------------------------------------------------------
 	/// This function updates our static pipePrintToConsole variable when the
 	/// public one changes, and ensures all other active LibPdInstances are
 	/// updated too.
@@ -659,7 +690,8 @@ public class LibPdInstance : MonoBehaviour {
 
 		//We use this to store the name of our PD patch as a string, as we need
 		//to feed the filename and directory into libpd.
-		patchName = patch.name;
+		if(patch != null)
+			patchName = patch.name;
 
 		if(lastName != patchName) {
 			patchDir = AssetDatabase.GetAssetPath(patch.GetInstanceID());
@@ -804,6 +836,7 @@ public class LibPdInstance : MonoBehaviour {
 	//--------------------------------------------------------------------------
 	/// Send a MIDI program change to the open patch.
 	/// <param name="value">The program to change to (0-127).</param>
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiProgramChange(int channel, int value)
 	{
 		libpd_set_instance(instance);
@@ -815,6 +848,7 @@ public class LibPdInstance : MonoBehaviour {
 	//--------------------------------------------------------------------------
 	/// Send a MIDI pitch bend to the open patch.
 	/// <param name ="value">The bend value has a  range -8192 -> +8192.</param>
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiPitchBend(int channel, int value)
 	{
 		libpd_set_instance(instance);
@@ -825,6 +859,7 @@ public class LibPdInstance : MonoBehaviour {
 
 	//--------------------------------------------------------------------------
 	///	Send a MIDI aftertouch message to the open patch.
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiAftertouch(int channel, int value)
 	{
 		libpd_set_instance(instance);
@@ -835,6 +870,7 @@ public class LibPdInstance : MonoBehaviour {
 
 	//--------------------------------------------------------------------------
 	///	Send a MIDI polyphonic aftertouch to the open patch.
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiPolyAftertouch(int channel, int pitch, int value)
 	{
 		libpd_set_instance(instance);
@@ -845,6 +881,7 @@ public class LibPdInstance : MonoBehaviour {
 
 	//--------------------------------------------------------------------------
 	///	Send a MIDI byte(?) to the open patch.
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiByte(int port, int value)
 	{
 		libpd_set_instance(instance);
@@ -855,6 +892,7 @@ public class LibPdInstance : MonoBehaviour {
 
 	//--------------------------------------------------------------------------
 	///	Send a MIDI sysex byte(?) to the open patch.
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiSysex(int port, int value)
 	{
 		libpd_set_instance(instance);
@@ -865,6 +903,7 @@ public class LibPdInstance : MonoBehaviour {
 
 	//--------------------------------------------------------------------------
 	///	Send a MIDI sysrealtime byte(?) to the open patch.
+	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void SendMidiSysRealtime(int port, int value)
 	{
 		libpd_set_instance(instance);
@@ -938,21 +977,21 @@ public class LibPdInstance : MonoBehaviour {
 	/// Receive bang messages.
 	void BangOutput(string symbol)
 	{
-		pureDataEvents.Bang.Invoke(symbol);
+		addAudioAction(() => {pureDataEvents.Bang.Invoke(symbol);});
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive float messages.
 	void FloatOutput(string symbol, float val)
 	{
-		pureDataEvents.Float.Invoke(symbol, val);
+		addAudioAction(() => {pureDataEvents.Float.Invoke(symbol, val);});
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive symbol messages.
 	void SymbolOutput(string symbol, string val)
 	{
-		pureDataEvents.Symbol.Invoke(symbol, val);
+		addAudioAction(() => {pureDataEvents.Symbol.Invoke(symbol, val);});
 	}
 
 	//--------------------------------------------------------------------------
@@ -961,7 +1000,7 @@ public class LibPdInstance : MonoBehaviour {
 	{
 		var args = ConvertList(argc, argv);
 
-		pureDataEvents.List.Invoke(source, args);
+		addAudioAction(() => {pureDataEvents.List.Invoke(source, args);});
 	}
 
 	//--------------------------------------------------------------------------
@@ -970,56 +1009,56 @@ public class LibPdInstance : MonoBehaviour {
 	{
 		var args = ConvertList(argc, argv);
 
-		pureDataEvents.Message.Invoke(source, symbol, args);
+		addAudioAction(() => {pureDataEvents.Message.Invoke(source, symbol, args);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI note on messages.
 	void MidiNoteOnOutput(int channel, int pitch, int velocity)
 	{
-		midiEvents.MidiNoteOn.Invoke(channel, pitch, velocity);
+		addAudioAction(() => {midiEvents.MidiNoteOn.Invoke(channel, pitch, velocity);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI control change messages.
 	void MidiControlChangeOutput(int channel, int controller, int value)
 	{
-		midiEvents.MidiControlChange.Invoke(channel, controller, value);
+		addAudioAction(() => {midiEvents.MidiControlChange.Invoke(channel, controller, value);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI program change messages.
 	void MidiProgramChangeOutput(int channel, int program)
 	{
-		midiEvents.MidiProgramChange.Invoke(channel, program);
+		addAudioAction(() => {midiEvents.MidiProgramChange.Invoke(channel, program);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI pitch bend messages.
 	void MidiPitchBendOutput(int channel, int value)
 	{
-		midiEvents.MidiPitchBend.Invoke(channel, value);
+		addAudioAction(() => {midiEvents.MidiPitchBend.Invoke(channel, value);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI aftertouch messages.
 	void MidiAftertouchOutput(int channel, int value)
 	{
-		midiEvents.MidiAftertouch.Invoke(channel, value);
+		addAudioAction(() => {midiEvents.MidiAftertouch.Invoke(channel, value);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI polyphonic aftertouch messages.
 	void MidiPolyAftertouchOutput(int channel, int pitch, int value)
 	{
-		midiEvents.MidiPolyAftertouch.Invoke(channel, pitch, value);
+		addAudioAction(() => {midiEvents.MidiPolyAftertouch.Invoke(channel, pitch, value);});
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI byte messages.
 	void MidiByteOutput(int channel, int value)
 	{
-		midiEvents.MidiByte.Invoke(channel, value);
+		addAudioAction(() => {midiEvents.MidiByte.Invoke(channel, value);});
 	}
 	#endregion
 
@@ -1072,5 +1111,20 @@ public class LibPdInstance : MonoBehaviour {
 
 		return retval;
 	}
+	
+	//--------------------------------------------------------------------------
+	/// Used to queue an event/action from the audio thread, to be dispatched in
+	/// the main thread.
+	private void addAudioAction(System.Action action) {
+		if (action == null)
+			throw new ArgumentNullException("action");
+
+		lock(audioThreadActions) {
+			audioThreadActions.Add(action);
+
+			actionsPending = true;
+		}
+	}
+
 	#endregion
 }
