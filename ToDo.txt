@@ -1,5 +1,14 @@
 LibPdIntegration ToDo
 ---------------------
+- Update spatialisation info.
+    - Recommend OculusSpatializer by default.
+    - Replace Examples spatialisation with OculusSpatializer (both scenes).
+    - Add Spatialisation page to the wiki listing the different options +
+      advantages, drawbacks.
+- Add a note about only supporting PD vanilla.
+- Add list of Pure Data resources.
+- Make a release.
+
 - printHook deletion in OnApplicationQuit()?
 - Linux build of libpd.
 - Build in my own spatialisation code?
