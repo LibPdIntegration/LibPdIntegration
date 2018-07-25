@@ -5,7 +5,6 @@
 - [Quickstart](#quickstart)
 - [Spatialisation](#spatialisation)
 
-  - [An Alternative Approach to Spatialisation](#an-alternative-approach-to-spatialisation)
 - [Caveats](#caveats)
 - [Future Plans](#future-plans)
 - [Credits](#credits)
