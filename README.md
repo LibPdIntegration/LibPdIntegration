@@ -47,9 +47,11 @@ For example, to use the **OculusSpatializer** plugin, you will first need to upd
 
 1. *Edit -> Project Settings... -> Audio*.
 2. Set **Spatializer Plugin** to **OculusSpatializer**.
-    ![Unity Audio Settings: Spatializer Plugin](docs/images/spatializerplugin.png)
+
+![Unity Audio Settings: Spatializer Plugin](docs/images/spatializerplugin.png)
 
 Then, for each **Audio Source** in your scene, toggle the **Spatialize** and **Spatialize Post Effects** options:
+
 ![Audio Source Spatialize toggles](docs/images/spatializeposteffects.png)
 
 For a complete list of spatialisation methods, see the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki).
