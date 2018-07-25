@@ -12,7 +12,7 @@
 
 ## About
 
-LibPdIntegration is a wrapper for [libpd](http://libpd.cc/) developed at [Abertay University](http://www.abertay.ac.uk), for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows and OSX.
+LibPdIntegration is a wrapper for [libpd](http://libpd.cc/) developed at [Abertay University](http://www.abertay.ac.uk) for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows and OSX.
 
 ## Unique Features
 
@@ -42,48 +42,41 @@ See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegr
 
 ## Spatialisation
 
-Due to the way Unity spatialises sound, spatialising a PD patch in Unity is a slightly involved process.
+There are a number of different methods for spatialising Pure Data patches in Unity. At the time of writing, the simplest method involves the use of one of Unity's included Spatializer plugins. 
 
-The first thing to note is that, by default, Unity only spatialises **Audio Sources**. It won't apply spatialisation to any other audio producing Components (like **Lib Pd Instance**). In order to get around that limitation, we need to cheat the system a bit.
-
-After adding an **Audio Source** and **Lib Pd Instance** to a GameObject in your scene, the steps you'll need to take to spatialise your PD patch are:
-
-1. Set the **Audio Source's** **AudioClip** to the [SpatialiserFix.wav](extras/SpatialiserFix.wav) file included in this repository. This is a short file containing a constant dc value of +1, so it should not be played through speakers. We're using it solely to send a signal to our PD patch. See [FilteredNoise.pd](https://github.com/LibPdIntegration/LibPdIntegrationExamples/tree/master/Assets/StreamingAssets/PdAssets/SpatialisationPatches) in [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) for a detailed explanation.
-![Spatialisation Inspector Audio Clip Setting](/docs/images/spatialiserfix-audioclip.png)
-
-2. Set the **Audio Source** to **Play On Awake** and **Loop**.
-![Spatialisation Inspector Loop Setting](/docs/images/spatialiserfix-loop.png)
-
-3. Adjust the **Spatial Blend** slider to **1 (3D)**.  
-![Spatialisation Inspector Spatial Blend Setting](/docs/images/spatialiserfix-spatialblend.png)
-
-4. In your PD patch, multiply the 2 outputs of an **adc~** object by the output of your patch before feeding it to the **dac~** object.
-![Spatialisation PD adc~ output](/docs/images/spatialiserfix-adc.png)
-
-This process will ensure that any spatialisation applied to the AudioSource gets applied to the output of your patch.
-
-### An Alternative Approach to Spatialisation
-
-An alternative, less-involved approach is to use Unity's **OculusSpatializer** plugin. When I tested it, this seemed to apply some odd filtering to the sound, but you may prefer this approach.
-
-To use the **OculusSpatializer** plugin, the steps are:
+For example, to use the **OculusSpatializer** plugin, you will first need to update your project settings:
 
 1. *Edit -> Project Settings... -> Audio*.
 2. Set **Spatializer Plugin** to **OculusSpatializer**.
+    ![Unity Audio Settings: Spatializer Plugin](docs/images/spatializerplugin.png)
 
-This will spatialise all audio for you, without any need for the aforementioned [SpatialiserFix.wav](extras/SpatialiserFix.wav) file and **adc~** object in each patch.
+Then, for each **Audio Source** in your scene, toggle the **Spatialize** and **Spatialize Post Effects** options:
+![Audio Source Spatialize toggles](docs/images/spatializeposteffects.png)
+
+For a complete list of spatialisation methods, see the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki).
 
 ## Caveats
 
+- Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and [Pd-Extended](https://puredata.info/downloads/pd-extended) will not work with libpd.
 - Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new mutiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
 - In order to get libpd working with Unity, a small [patch](extras/PatchInfo.md) to libpd is necessary ([included in this repository](extras/z_libpd.patch)). The native [Plugins](Assets/Plugins/) in this repository include this patch, but if you want to deploy to other platforms, you'll need to apply the patch yourself.
 
 ## Future Plans
 
 - Properly formatted reference documentation, generated from [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs).
+
 - Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. This is complicated slightly by the fact that LibPdIntegration requires a [patch](extras/PatchInfo.md) to libpd ([included in this repository](extras/z_libpd.patch)), so any existing libpd binaries found on the internet will not work. The plan is to provide binaries for more platforms as time and resources allow.
+
 - Expand the example project.
+
 - Gallery of projects using LibPdIntegration?
+
+## Pure Data Resources
+
+- [Pure Data Main Site](https://puredata.info/)
+- [Pure Data Forum](https://forum.pdpatchrepo.info/)
+- [Pure Data Manual](http://write.flossmanuals.net/pure-data/introduction2/)
+- [Martin Brinkmann's PD Patches](http://www.martin-brinkmann.de/pd-patches.html)
 
 ## Credits
 
