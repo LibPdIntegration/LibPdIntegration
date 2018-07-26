@@ -49,7 +49,9 @@ For example, to use the **OculusSpatializer** plugin, you will first need to upd
 
 ![Unity Audio Settings: Spatializer Plugin](docs/images/spatializerplugin.png)
 
-Then, for each **Audio Source** in your scene, toggle the **Spatialize** and **Spatialize Post Effects** options:
+Then, for each **Audio Source** in your scene, set the **Spatial Blend** slider to 1(_3D_), and toggle the **Spatialize** and **Spatialize Post Effects** options:
+
+![Audio Source Spatial Blend slider](docs/images/spatialiserfix-spatialblend.png)
 
 ![Audio Source Spatialize toggles](docs/images/spatializeposteffects.png)
 
