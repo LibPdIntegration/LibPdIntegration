@@ -118,6 +118,12 @@ public class LibPdInstance : MonoBehaviour {
 	private static extern int libpd_init();
 
 	[DllImport("libpd")]
+	private static extern void libpd_clear_search_path();
+
+	[DllImport("libpd")]
+	private static extern void libpd_add_to_search_path([In] [MarshalAs(UnmanagedType.LPStr)] string s);
+
+	[DllImport("libpd")]
 	private static extern IntPtr libpd_new_instance();
 
 	[DllImport("libpd")]
@@ -527,6 +533,12 @@ public class LibPdInstance : MonoBehaviour {
 
 			midiByteHook = new LibPdMidiByteHook(MidiByteOutput);
 			libpd_set_midibytehook(midiByteHook);
+
+			// Try and add the patch directory to libpd's search path for
+			// loading externals (still can't seem to load externals when
+			// running in Unity though).
+			if(patchDir != String.Empty)
+				libpd_add_to_search_path(Application.dataPath + patchDir);
 
 			// Initialise libpd if possible, report any errors.
 			int initErr = libpd_init();
