@@ -534,12 +534,6 @@ public class LibPdInstance : MonoBehaviour {
 			midiByteHook = new LibPdMidiByteHook(MidiByteOutput);
 			libpd_set_midibytehook(midiByteHook);
 
-			// Try and add the patch directory to libpd's search path for
-			// loading externals (still can't seem to load externals when
-			// running in Unity though).
-			if(patchDir != String.Empty)
-				libpd_add_to_search_path(Application.dataPath + patchDir);
-
 			// Initialise libpd if possible, report any errors.
 			int initErr = libpd_init();
 			if(initErr != 0)
@@ -548,6 +542,12 @@ public class LibPdInstance : MonoBehaviour {
 				Debug.LogWarning("(if you're running this in the editor that probably just means this isn't the first time you've run your game, and is not a problem)");
 			}
 			pdInitialised = true;
+
+			// Try and add the patch directory to libpd's search path for
+			// loading externals (still can't seem to load externals when
+			// running in Unity though).
+			if(patchDir != String.Empty)
+				libpd_add_to_search_path(Application.dataPath + patchDir);
 
 			// Make sure our static pipePrintToConsole variable is set
 			// correctly.
