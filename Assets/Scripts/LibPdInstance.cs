@@ -1,6 +1,6 @@
 ﻿// LibPdInstance.cs - Unity integration of libpd, supporting multiple instances.
 // -----------------------------------------------------------------------------
-// Copyright (c) 2018 Niall Moody
+// Copyright (c) 2019 Niall Moody
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -109,7 +109,8 @@ public class IntIntEvent : UnityEvent<int, int> {}
 /// 
 /// </remarks>
 [RequireComponent(typeof(AudioSource))]
-public class LibPdInstance : MonoBehaviour {
+public class LibPdInstance : MonoBehaviour
+{
 
 	#region libpd imports
 	//--------------------------------------------------------------------------
@@ -396,9 +397,6 @@ public class LibPdInstance : MonoBehaviour {
 	/// The Pd patch this instance is running.
 	[HideInInspector]
 	public string patchName;
-	///	The path to the directory of the Pd patch this instance is running.
-	[HideInInspector]
-	public string patchDir;
 
 	#if UNITY_EDITOR
 	/// This is a slightly tricky workaround we use so that we can drag and drop
@@ -450,7 +448,8 @@ public class LibPdInstance : MonoBehaviour {
 	//--------------------------------------------------------------------------
 	/// Events placed in a struct so they don't clutter up the Inspector by default.
 	[System.Serializable]
-	public struct PureDataEvents {
+	public struct PureDataEvents
+	{
 		/// UnityEvent that will be invoked whenever we recieve a bang from the PD patch.
 		public StringEvent Bang;
 		/// UnityEvent that will be invoked whenever we recieve a float from the PD patch.
@@ -467,7 +466,8 @@ public class LibPdInstance : MonoBehaviour {
 	
 	/// Events placed in a struct so they don't clutter up the Inspector by default.
 	[System.Serializable]
-	public struct MidiEvents {
+	public struct MidiEvents
+	{
 		/// UnityEvent that will be invoked whenever we recieve a MIDI note on from the PD patch.
 		public IntIntIntEvent MidiNoteOn;
 		/// UnityEvent that will be invoked whenever we recieve a MIDI CC from the PD patch.
@@ -489,7 +489,7 @@ public class LibPdInstance : MonoBehaviour {
 	#region MonoBehaviour methods
 	//--------------------------------------------------------------------------
 	/// Initialise LibPd.
-	void Awake ()
+	void Awake()
 	{
 		// Initialise libpd, if it's not already.
 		if(!pdInitialised)
@@ -546,8 +546,7 @@ public class LibPdInstance : MonoBehaviour {
 			// Try and add the patch directory to libpd's search path for
 			// loading externals (still can't seem to load externals when
 			// running in Unity though).
-			if(patchDir != String.Empty)
-				libpd_add_to_search_path(Application.dataPath + patchDir);
+			libpd_add_to_search_path(Application.streamingAssetsPath + "/PdAssets/");
 
 			// Make sure our static pipePrintToConsole variable is set
 			// correctly.
@@ -597,7 +596,7 @@ public class LibPdInstance : MonoBehaviour {
 
 		// Initialise audio.
 		int err = libpd_init_audio(2, 2, AudioSettings.outputSampleRate);
-		if (err != 0)
+		if(err != 0)
 		{
 			pdFail = true;
 			Debug.LogError(gameObject.name + ": Could not initialise Pure Data audio. Error = " + err);
@@ -615,10 +614,13 @@ public class LibPdInstance : MonoBehaviour {
 				bindings = new Dictionary<string, IntPtr>();
 
 				// Open our patch.
-				patchPointer = libpd_openfile(patchName + ".pd", Application.dataPath + patchDir);
+				patchPointer = libpd_openfile(patchName + ".pd", Application.streamingAssetsPath + "/PdAssets/");
 				if(patchPointer == IntPtr.Zero)
 				{
-					Debug.LogError(gameObject.name + ": Could not open patch. Directory: " + (Application.dataPath + patchDir) + " Patch: " + patchName + ".pd");
+					Debug.LogError(gameObject.name +
+								   ": Could not open patch. Directory: " +
+								   (Application.streamingAssetsPath + "/PdAssets/") +
+								   " Patch: " + patchName + ".pd");
 					patchFail = true;
 				}
 
@@ -632,7 +634,7 @@ public class LibPdInstance : MonoBehaviour {
 	
 	//--------------------------------------------------------------------------
 	/// Close the patch file on quit.
-	void OnApplicationQuit ()
+	void OnApplicationQuit()
 	{
 		if(!pdFail && !patchFail)
 		{
@@ -663,12 +665,15 @@ public class LibPdInstance : MonoBehaviour {
 	/// Any send/MIDI events sent from libpd will be sent from the audio thread,
 	/// so we have to queue them and send them from the main thread, or Unity
 	/// will get very upset.
-	public void Update() {
-		if(actionsPending) {
+	public void Update()
+	{
+		if(actionsPending)
+		{
 			mainThreadActions.Clear();
 
 			//Copy events queued from audio thread.
-			lock(audioThreadActions) {
+			lock(audioThreadActions)
+			{
 				mainThreadActions.AddRange(audioThreadActions);
 
 				audioThreadActions.Clear();
@@ -704,23 +709,12 @@ public class LibPdInstance : MonoBehaviour {
 		//to feed the filename and directory into libpd.
 		if(patch != null)
 			patchName = patch.name;
-
-		if(lastName != patchName) {
-			patchDir = AssetDatabase.GetAssetPath(patch.GetInstanceID());
-
-			//Strip out "Assets", as the files won't be in the Assets folder in
-			//a built version, only when running in the editor.
-			patchDir = patchDir.Substring(patchDir.IndexOf("Assets") + 6);
-
-			//Remove the name of the patch, as we only need the directory.
-			patchDir = patchDir.Substring(0, patchDir.LastIndexOf('/') + 1);
-		}
 		#endif
 	}
 
 	//--------------------------------------------------------------------------
 	/// Process audio.
-	void OnAudioFilterRead (float[] data, int channels)
+	void OnAudioFilterRead(float[] data, int channels)
 	{
 		if(!pdFail && !patchFail)
 		{
@@ -1127,11 +1121,13 @@ public class LibPdInstance : MonoBehaviour {
 	//--------------------------------------------------------------------------
 	/// Used to queue an event/action from the audio thread, to be dispatched in
 	/// the main thread.
-	private void addAudioAction(System.Action action) {
+	private void addAudioAction(System.Action action)
+	{
 		if (action == null)
 			throw new ArgumentNullException("action");
 
-		lock(audioThreadActions) {
+		lock(audioThreadActions)
+		{
 			audioThreadActions.Add(action);
 
 			actionsPending = true;
