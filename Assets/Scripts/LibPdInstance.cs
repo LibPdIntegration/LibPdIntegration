@@ -397,6 +397,9 @@ public class LibPdInstance : MonoBehaviour
 	/// The Pd patch this instance is running.
 	[HideInInspector]
 	public string patchName;
+	///	Path to the folder the patch is in.
+	[HideInInspector]
+	public string patchDir;
 
 	#if UNITY_EDITOR
 	/// This is a slightly tricky workaround we use so that we can drag and drop
@@ -542,11 +545,12 @@ public class LibPdInstance : MonoBehaviour
 				Debug.LogWarning("(if you're running this in the editor that probably just means this isn't the first time you've run your game, and is not a problem)");
 			}
 			pdInitialised = true;
-
+			
 			// Try and add the patch directory to libpd's search path for
 			// loading externals (still can't seem to load externals when
 			// running in Unity though).
-			libpd_add_to_search_path(Application.streamingAssetsPath + "/PdAssets/");
+			if(patchDir != String.Empty)
+				libpd_add_to_search_path(Application.dataPath + patchDir);
 
 			// Make sure our static pipePrintToConsole variable is set
 			// correctly.
@@ -614,12 +618,13 @@ public class LibPdInstance : MonoBehaviour
 				bindings = new Dictionary<string, IntPtr>();
 
 				// Open our patch.
-				patchPointer = libpd_openfile(patchName + ".pd", Application.streamingAssetsPath + "/PdAssets/");
+				patchPointer = libpd_openfile(patchName + ".pd",
+											  Application.streamingAssetsPath + patchDir);
 				if(patchPointer == IntPtr.Zero)
 				{
 					Debug.LogError(gameObject.name +
 								   ": Could not open patch. Directory: " +
-								   (Application.streamingAssetsPath + "/PdAssets/") +
+								   Application.streamingAssetsPath + patchDir +
 								   " Patch: " + patchName + ".pd");
 					patchFail = true;
 				}
@@ -709,6 +714,20 @@ public class LibPdInstance : MonoBehaviour
 		//to feed the filename and directory into libpd.
 		if(patch != null)
 			patchName = patch.name;
+
+		if((lastName != patchName) ||
+		   ((patch != null) && (patchDir == null)) ||
+		   ((patch != null) && (patchDir != null) && (patchDir.IndexOf("StreamingAssets") != -1))) //This is unfortunately necessary to upgrade the serialised data saved from versions of LibPdIntegration < v2.0.1.
+		{
+			patchDir = AssetDatabase.GetAssetPath(patch.GetInstanceID());
+
+			//Strip out "Assets/StreamingAssets", as the files won't be in the
+			//Assets folder in a built version, only when running in the editor.
+			patchDir = patchDir.Substring(patchDir.IndexOf("Assets/StreamingAssets") + 22);
+
+			//Remove the name of the patch, as we only need the directory.
+			patchDir = patchDir.Substring(0, patchDir.LastIndexOf('/') + 1);
+		}
 		#endif
 	}
 
