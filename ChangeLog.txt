@@ -1,0 +1,14 @@
+v2.0.1
+------
+- Switched to looking in Application.streamingAssetsPath for patches instead of
+  Application.dataPath.
+- Built new version of libpd (Windows), incorporating fix for bug with 64-bit
+  Windows builds of Unity projects.
+
+v2.0.0
+------
+- Switched over to using UnityEvents for PD -> Unity communication.
+
+v1.0.0
+------
+- Initial release.
