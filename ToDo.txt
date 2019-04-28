@@ -1,5 +1,8 @@
 LibPdIntegration ToDo
 ---------------------
+- Add patchDir back in so we can account for patches in subfolders.
+    - Call it a different name though so we keep backwards compatibility?
+
 - printHook deletion in OnApplicationQuit()?
 - Linux build of libpd.
 - Build in my own spatialisation code?
