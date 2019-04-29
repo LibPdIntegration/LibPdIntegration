@@ -4,10 +4,7 @@ LibPdIntegration ToDo
     - Test builds work with 32bit Windows in 2018.1.
     - Test builds work with 64bit Windows in 2019.1.
     - Test builds work with 32bit Windows in 2019.1.
-    - Test builds work with MacOSX in 2018.1.
-    - Test builds work with MacOSX in 2019.1.
     - Update README.md to mention it's been tested with 2019.1.
-    - Add wrap~ (etc.) test to LibPdIntegrationTests.
     - Do v2.0.1 release of LibPdIntegrationExamples.
 
 - printHook deletion in OnApplicationQuit()?
