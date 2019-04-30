@@ -1,9 +1,5 @@
 LibPdIntegration ToDo
 ---------------------
-- v2.0.1 release todo:
-    - Update README.md to mention it's been tested with 2019.1.
-    - Do v2.0.1 release of LibPdIntegrationExamples.
-
 - printHook deletion in OnApplicationQuit()?
 - Linux build of libpd.
 - Build in my own spatialisation code?
