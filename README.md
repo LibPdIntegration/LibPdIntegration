@@ -17,7 +17,7 @@ LibPdIntegration is a wrapper for [libpd](http://libpd.cc/) developed at [Aberta
 
 LibPdIntegration offers a couple of features which set it apart from existing implementations of libpd for Unity:
 
-- It works with recent versions of Unity (at time of writing, tested on 2018.1 and 2018.2).
+- It works with recent versions of Unity (at time of writing, tested on 2018.1 and 2019.1).
 - It supports multiple instances. This was impossible with previous implementations, as libpd itself did not support running multiple patches side by side. The libpd developers have recently removed that limitation however, meaning LibPdIntegration can allow developers to run multiple PD patches in their Unity projects. This also means it's now feasible to build a 3D scene in Unity with multiple PD patches all spatialised using Unity's audio code.
 
 ## Quickstart
