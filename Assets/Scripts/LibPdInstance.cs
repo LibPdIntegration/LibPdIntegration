@@ -116,7 +116,16 @@ public class LibPdInstance : MonoBehaviour
 	//--------------------------------------------------------------------------
 	/// libpd functions that we need to be able to call from C#.
 	[DllImport("libpd")]
-	private static extern int libpd_init();
+	private static extern int libpd_queued_init();
+
+	[DllImport("libpd")]
+	private static extern void libpd_queued_release();
+
+	[DllImport("libpd")]
+	private static extern void libpd_queued_receive_pd_messages();
+
+	[DllImport("libpd")]
+	private static extern void libpd_queued_receive_midi_messages();
 
 	[DllImport("libpd")]
 	private static extern void libpd_clear_search_path();
@@ -142,6 +151,9 @@ public class LibPdInstance : MonoBehaviour
 
 	[DllImport("libpd")]
 	private static extern void libpd_closefile(IntPtr p);
+
+	[DllImport("libpd")]
+	private static extern int libpd_getdollarzero(IntPtr p);
 
 	[DllImport("libpd")]
 	private static extern int libpd_process_float(int ticks,
@@ -266,7 +278,7 @@ public class LibPdInstance : MonoBehaviour
 
 	/// libpd function for setting the hook.
 	[DllImport("libpd")]
-	private static extern void libpd_set_printhook(LibPdPrintHook hook);
+	private static extern void libpd_set_queued_printhook(LibPdPrintHook hook);
 
 	/// Instance of the print hook, kept to ensure it doesn't get garbage
 	/// collected.
@@ -277,7 +289,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdBangHook([In] [MarshalAs(UnmanagedType.LPStr)] string symbol);
 	
 	[DllImport("libpd")]
-	private static extern void libpd_set_banghook(LibPdBangHook hook);
+	private static extern void libpd_set_queued_banghook(LibPdBangHook hook);
 	
 	private LibPdBangHook bangHook;
 
@@ -287,7 +299,7 @@ public class LibPdInstance : MonoBehaviour
 										float val);
 	
 	[DllImport("libpd")]
-	private static extern void libpd_set_floathook(LibPdFloatHook hook);
+	private static extern void libpd_set_queued_floathook(LibPdFloatHook hook);
 	
 	private LibPdFloatHook floatHook;
 
@@ -297,7 +309,7 @@ public class LibPdInstance : MonoBehaviour
 										 [In] [MarshalAs(UnmanagedType.LPStr)] string val);
 	
 	[DllImport("libpd")]
-	private static extern void libpd_set_symbolhook(LibPdSymbolHook hook);
+	private static extern void libpd_set_queued_symbolhook(LibPdSymbolHook hook);
 	
 	private LibPdSymbolHook symbolHook;
 
@@ -308,7 +320,7 @@ public class LibPdInstance : MonoBehaviour
 									   IntPtr argv);
 	
 	[DllImport("libpd")]
-	private static extern void libpd_set_listhook(LibPdListHook hook);
+	private static extern void libpd_set_queued_listhook(LibPdListHook hook);
 	
 	private LibPdListHook listHook;
 
@@ -320,7 +332,7 @@ public class LibPdInstance : MonoBehaviour
 										  IntPtr argv);
 	
 	[DllImport("libpd")]
-	private static extern void libpd_set_messagehook(LibPdMessageHook hook);
+	private static extern void libpd_set_queued_messagehook(LibPdMessageHook hook);
 	
 	private LibPdMessageHook messageHook;
 
@@ -331,7 +343,7 @@ public class LibPdInstance : MonoBehaviour
 											 int velocity);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_noteonhook(LibPdMidiNoteOnHook hook);
+	private static extern void libpd_set_queued_noteonhook(LibPdMidiNoteOnHook hook);
 
 	private LibPdMidiNoteOnHook noteOnHook;
 
@@ -342,7 +354,7 @@ public class LibPdInstance : MonoBehaviour
 													int value);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_controlchangehook(LibPdMidiControlChangeHook hook);
+	private static extern void libpd_set_queued_controlchangehook(LibPdMidiControlChangeHook hook);
 
 	private LibPdMidiControlChangeHook controlChangeHook;
 
@@ -351,7 +363,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdMidiProgramChangeHook(int channel, int program);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_programchangehook(LibPdMidiProgramChangeHook hook);
+	private static extern void libpd_set_queued_programchangehook(LibPdMidiProgramChangeHook hook);
 
 	private LibPdMidiProgramChangeHook programChangeHook;
 
@@ -360,7 +372,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdMidiPitchBendHook(int channel, int value);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_pitchbendhook(LibPdMidiPitchBendHook hook);
+	private static extern void libpd_set_queued_pitchbendhook(LibPdMidiPitchBendHook hook);
 
 	private LibPdMidiPitchBendHook pitchBendHook;
 
@@ -369,7 +381,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdMidiAftertouchHook(int channel, int value);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_aftertouchhook(LibPdMidiAftertouchHook hook);
+	private static extern void libpd_set_queued_aftertouchhook(LibPdMidiAftertouchHook hook);
 
 	private LibPdMidiAftertouchHook aftertouchHook;
 
@@ -378,7 +390,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdMidiPolyAftertouchHook(int channel, int pitch, int value);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_polyaftertouchhook(LibPdMidiPolyAftertouchHook hook);
+	private static extern void libpd_set_queued_polyaftertouchhook(LibPdMidiPolyAftertouchHook hook);
 
 	private LibPdMidiPolyAftertouchHook polyAftertouchHook;
 
@@ -387,7 +399,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdMidiByteHook(int channel, int value);
 
 	[DllImport("libpd")]
-	private static extern void libpd_set_midibytehook(LibPdMidiByteHook hook);
+	private static extern void libpd_set_queued_midibytehook(LibPdMidiByteHook hook);
 
 	private LibPdMidiByteHook midiByteHook;
 	#endregion
@@ -431,6 +443,15 @@ public class LibPdInstance : MonoBehaviour
 	/// Any bindings we have for this patch.
 	private Dictionary<string, IntPtr> bindings;
 
+	///	We use this to ensure libpd -> Unity events get sent to all LibPdInstances.
+	/*!
+		It's also used to ensure libpd_queued_release() only gets called once
+		all LibPdInstances have been destroyed.
+	 */
+	private static List<LibPdInstance> activeInstances = new List<LibPdInstance>();
+	///	The WeakReference pointing to ourselves in activeInstances.
+	//private WeakReference instanceReference;
+
 	/// True if we were unable to intialise Pd's audio processing.
 	private bool pdFail = false;
 	/// True if we were unable to open our patch.
@@ -438,13 +459,6 @@ public class LibPdInstance : MonoBehaviour
 
 	/// Global variable used to ensure we don't initialise LibPd more than once.
 	private static bool pdInitialised = false;
-
-	/// Holds any actions (events) sent from the audio thread.
-	private List<System.Action> audioThreadActions = new List<System.Action>();
-	/// Holds any actions (events) that have been copied over into the main thread to execute.
-	private List<System.Action> mainThreadActions = new List<System.Action>();
-	/// True if there are audioThreadActions pending.
-	private volatile bool actionsPending = false;
 	#endregion
 
 	#region events
@@ -499,46 +513,46 @@ public class LibPdInstance : MonoBehaviour
 		{
 			// Setup hooks.
 			printHook = new LibPdPrintHook(PrintOutput);
-			libpd_set_printhook(printHook);
+			libpd_set_queued_printhook(printHook);
 			
 			bangHook = new LibPdBangHook(BangOutput);
-			libpd_set_banghook(bangHook);
+			libpd_set_queued_banghook(bangHook);
 			
 			floatHook = new LibPdFloatHook(FloatOutput);
-			libpd_set_floathook(floatHook);
+			libpd_set_queued_floathook(floatHook);
 			
 			symbolHook = new LibPdSymbolHook(SymbolOutput);
-			libpd_set_symbolhook(symbolHook);
+			libpd_set_queued_symbolhook(symbolHook);
 			
 			listHook = new LibPdListHook(ListOutput);
-			libpd_set_listhook(listHook);
+			libpd_set_queued_listhook(listHook);
 			
 			messageHook = new LibPdMessageHook(MessageOutput);
-			libpd_set_messagehook(messageHook);
+			libpd_set_queued_messagehook(messageHook);
 			
 			noteOnHook = new LibPdMidiNoteOnHook(MidiNoteOnOutput);
-			libpd_set_noteonhook(noteOnHook);
+			libpd_set_queued_noteonhook(noteOnHook);
 
 			controlChangeHook = new LibPdMidiControlChangeHook(MidiControlChangeOutput);
-			libpd_set_controlchangehook(controlChangeHook);
+			libpd_set_queued_controlchangehook(controlChangeHook);
 
 			programChangeHook = new LibPdMidiProgramChangeHook(MidiProgramChangeOutput);
-			libpd_set_programchangehook(programChangeHook);
+			libpd_set_queued_programchangehook(programChangeHook);
 
 			pitchBendHook = new LibPdMidiPitchBendHook(MidiPitchBendOutput);
-			libpd_set_pitchbendhook(pitchBendHook);
+			libpd_set_queued_pitchbendhook(pitchBendHook);
 
 			aftertouchHook = new LibPdMidiAftertouchHook(MidiAftertouchOutput);
-			libpd_set_aftertouchhook(aftertouchHook);
+			libpd_set_queued_aftertouchhook(aftertouchHook);
 
 			polyAftertouchHook = new LibPdMidiPolyAftertouchHook(MidiPolyAftertouchOutput);
-			libpd_set_polyaftertouchhook(polyAftertouchHook);
+			libpd_set_queued_polyaftertouchhook(polyAftertouchHook);
 
 			midiByteHook = new LibPdMidiByteHook(MidiByteOutput);
-			libpd_set_midibytehook(midiByteHook);
+			libpd_set_queued_midibytehook(midiByteHook);
 
 			// Initialise libpd if possible, report any errors.
-			int initErr = libpd_init();
+			int initErr = libpd_queued_init();
 			if(initErr != 0)
 			{
 				Debug.LogWarning("Warning; libpd_init() returned " + initErr);
@@ -550,7 +564,7 @@ public class LibPdInstance : MonoBehaviour
 			// loading externals (still can't seem to load externals when
 			// running in Unity though).
 			if(patchDir != String.Empty)
-				libpd_add_to_search_path(Application.dataPath + patchDir);
+				libpd_add_to_search_path(Application.streamingAssetsPath + patchDir);
 
 			// Make sure our static pipePrintToConsole variable is set
 			// correctly.
@@ -559,31 +573,8 @@ public class LibPdInstance : MonoBehaviour
 		else
 			pipePrintToConsole = pipePrintToConsoleStatic;
 
-		if(pureDataEvents.Bang == null)
-			pureDataEvents.Bang = new StringEvent();
-		if(pureDataEvents.Float == null)
-			pureDataEvents.Float = new StringFloatEvent();
-		if(pureDataEvents.Symbol == null)
-			pureDataEvents.Symbol = new StringStringEvent();
-		if(pureDataEvents.List == null)
-			pureDataEvents.List = new StringObjArrEvent();
-		if(pureDataEvents.Message == null)
-			pureDataEvents.Message = new StringStringObjArrEvent();
-
-		if(midiEvents.MidiNoteOn == null)
-			midiEvents.MidiNoteOn = new IntIntIntEvent();
-		if(midiEvents.MidiControlChange == null)
-			midiEvents.MidiControlChange = new IntIntIntEvent();
-		if(midiEvents.MidiProgramChange == null)
-			midiEvents.MidiProgramChange = new IntIntEvent();
-		if(midiEvents.MidiPitchBend == null)
-			midiEvents.MidiPitchBend = new IntIntEvent();
-		if(midiEvents.MidiAftertouch == null)
-			midiEvents.MidiAftertouch = new IntIntEvent();
-		if(midiEvents.MidiPolyAftertouch == null)
-			midiEvents.MidiPolyAftertouch = new IntIntIntEvent();
-		if(midiEvents.MidiByte == null)
-			midiEvents.MidiByte = new IntIntEvent();
+		//Add to our list of active instances.
+		activeInstances.Add(this);
 
 		// Calc numTicks.
 		int bufferSize;
@@ -641,6 +632,9 @@ public class LibPdInstance : MonoBehaviour
 	/// Close the patch file on quit.
 	void OnApplicationQuit()
 	{
+		//Remove from our list of active instances before we do anything else.
+		activeInstances.Remove(this);
+
 		if(!pdFail && !patchFail)
 		{
 			libpd_set_instance(instance);
@@ -654,7 +648,7 @@ public class LibPdInstance : MonoBehaviour
 			if(printHook != null)
 			{
 				printHook = null;
-				libpd_set_printhook(printHook);
+				libpd_set_queued_printhook(printHook);
 			}
 
 			foreach(var ptr in bindings.Values)
@@ -662,6 +656,14 @@ public class LibPdInstance : MonoBehaviour
 			bindings.Clear();
 
 			libpd_closefile(patchPointer);
+		}
+
+		//If we're the last instance left, release libpd's ringbuffer.
+		if(pdInitialised && (activeInstances.Count < 1))
+		{
+			libpd_queued_release();
+
+			pdInitialised = true;
 		}
 	}
 	
@@ -672,22 +674,15 @@ public class LibPdInstance : MonoBehaviour
 	/// will get very upset.
 	public void Update()
 	{
-		if(actionsPending)
+		//Receive any queued messages.
+		/*!
+			We use this slightly hacky if statement to ensure we only receive
+			messages once per frame.
+		 */
+		if(this == activeInstances[0])
 		{
-			mainThreadActions.Clear();
-
-			//Copy events queued from audio thread.
-			lock(audioThreadActions)
-			{
-				mainThreadActions.AddRange(audioThreadActions);
-
-				audioThreadActions.Clear();
-				actionsPending = false;
-			}
-
-			//Dispatch events on main thread.
-			for(int i=0;i<mainThreadActions.Count;++i)
-				mainThreadActions[i].Invoke();
+			libpd_queued_receive_pd_messages();
+			libpd_queued_receive_midi_messages();
 		}
 	}
 	
@@ -744,6 +739,13 @@ public class LibPdInstance : MonoBehaviour
 	#endregion
 
 	#region public methods
+	//--------------------------------------------------------------------------
+	///	Returns the dollar-zero ID for the patch instance.
+	public int GetDollarZero()
+	{
+		return libpd_getdollarzero(patchPointer);
+	}
+
 	//--------------------------------------------------------------------------
 	/// Bind to a named object in the patch.
 	[MethodImpl(MethodImplOptions.Synchronized)]
@@ -992,7 +994,7 @@ public class LibPdInstance : MonoBehaviour
 	#region delegate definitions
 	//--------------------------------------------------------------------------
 	/// Receive print messages.
-	static void PrintOutput(string message)
+	private static void PrintOutput(string message)
 	{
 		if(pipePrintToConsoleStatic)
 			Debug.Log("libpd: " + message);
@@ -1000,90 +1002,102 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive bang messages.
-	void BangOutput(string symbol)
+	private static void BangOutput(string symbol)
 	{
-		addAudioAction(() => {pureDataEvents.Bang.Invoke(symbol);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.pureDataEvents.Bang.Invoke(symbol);
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive float messages.
-	void FloatOutput(string symbol, float val)
+	private static void FloatOutput(string symbol, float val)
 	{
-		addAudioAction(() => {pureDataEvents.Float.Invoke(symbol, val);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.pureDataEvents.Float.Invoke(symbol, val);
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive symbol messages.
-	void SymbolOutput(string symbol, string val)
+	private static void SymbolOutput(string symbol, string val)
 	{
-		addAudioAction(() => {pureDataEvents.Symbol.Invoke(symbol, val);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.pureDataEvents.Symbol.Invoke(symbol, val);
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive lists.
-	void ListOutput(string source, int argc, IntPtr argv)
+	private static void ListOutput(string source, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
 
-		addAudioAction(() => {pureDataEvents.List.Invoke(source, args);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.pureDataEvents.List.Invoke(source, args);
 	}
 
 	//--------------------------------------------------------------------------
 	/// Receive messages.
-	void MessageOutput(string source, string symbol, int argc, IntPtr argv)
+	private static void MessageOutput(string source, string symbol, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
 
-		addAudioAction(() => {pureDataEvents.Message.Invoke(source, symbol, args);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.pureDataEvents.Message.Invoke(source, symbol, args);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI note on messages.
-	void MidiNoteOnOutput(int channel, int pitch, int velocity)
+	private static void MidiNoteOnOutput(int channel, int pitch, int velocity)
 	{
-		addAudioAction(() => {midiEvents.MidiNoteOn.Invoke(channel, pitch, velocity);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiNoteOn.Invoke(channel, pitch, velocity);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI control change messages.
-	void MidiControlChangeOutput(int channel, int controller, int value)
+	private static void MidiControlChangeOutput(int channel, int controller, int value)
 	{
-		addAudioAction(() => {midiEvents.MidiControlChange.Invoke(channel, controller, value);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiControlChange.Invoke(channel, controller, value);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI program change messages.
-	void MidiProgramChangeOutput(int channel, int program)
+	private static void MidiProgramChangeOutput(int channel, int program)
 	{
-		addAudioAction(() => {midiEvents.MidiProgramChange.Invoke(channel, program);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiProgramChange.Invoke(channel, program);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI pitch bend messages.
-	void MidiPitchBendOutput(int channel, int value)
+	private static void MidiPitchBendOutput(int channel, int value)
 	{
-		addAudioAction(() => {midiEvents.MidiPitchBend.Invoke(channel, value);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiPitchBend.Invoke(channel, value);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI aftertouch messages.
-	void MidiAftertouchOutput(int channel, int value)
+	private static void MidiAftertouchOutput(int channel, int value)
 	{
-		addAudioAction(() => {midiEvents.MidiAftertouch.Invoke(channel, value);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiAftertouch.Invoke(channel, value);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI polyphonic aftertouch messages.
-	void MidiPolyAftertouchOutput(int channel, int pitch, int value)
+	private static void MidiPolyAftertouchOutput(int channel, int pitch, int value)
 	{
-		addAudioAction(() => {midiEvents.MidiPolyAftertouch.Invoke(channel, pitch, value);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiPolyAftertouch.Invoke(channel, pitch, value);
 	}
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI byte messages.
-	void MidiByteOutput(int channel, int value)
+	private static void MidiByteOutput(int channel, int value)
 	{
-		addAudioAction(() => {midiEvents.MidiByte.Invoke(channel, value);});
+		foreach(LibPdInstance instance in activeInstances)
+			instance.midiEvents.MidiByte.Invoke(channel, value);
 	}
 	#endregion
 
@@ -1119,7 +1133,7 @@ public class LibPdInstance : MonoBehaviour
 	
 	//--------------------------------------------------------------------------
 	///	Helper method. Used by ListOutput() and MessageOutput().
-	private object[] ConvertList(int argc, IntPtr argv)
+	private static object[] ConvertList(int argc, IntPtr argv)
 	{
 		var retval = new object[argc];
 
@@ -1135,22 +1149,6 @@ public class LibPdInstance : MonoBehaviour
 		}
 
 		return retval;
-	}
-	
-	//--------------------------------------------------------------------------
-	/// Used to queue an event/action from the audio thread, to be dispatched in
-	/// the main thread.
-	private void addAudioAction(System.Action action)
-	{
-		if (action == null)
-			throw new ArgumentNullException("action");
-
-		lock(audioThreadActions)
-		{
-			audioThreadActions.Add(action);
-
-			actionsPending = true;
-		}
 	}
 
 	#endregion

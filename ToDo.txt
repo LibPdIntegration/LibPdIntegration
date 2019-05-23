@@ -1,15 +1,12 @@
 LibPdIntegration ToDo
 ---------------------
-- Fix libpd -> Unity communication.
-    - Implement queued version of libpd.
-    - Update wiki once it's all working.
-
+- Create singleton LibPdManager class to handle all of the global operations
+  libpd requires us to work with.
 - printHook deletion in OnApplicationQuit()?
 - Linux build of libpd.
 - Build in my own spatialisation code?
 - Should I separate the LibPD stuff out from the MonoBehaviour?
     - I do like the single-file approach for a library.
 - More robust Print implementation (let users redirect to their own classes).
-- Use queued version instead?
 - Add a public array of symbols to bind to when LibPdInstance is constructed,
   so clients don't need to call Bind()/UnBind() themselves?
