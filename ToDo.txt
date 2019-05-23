@@ -1,5 +1,9 @@
 LibPdIntegration ToDo
 ---------------------
+- Fix libpd -> Unity communication.
+    - Implement queued version of libpd.
+    - Update wiki once it's all working.
+
 - printHook deletion in OnApplicationQuit()?
 - Linux build of libpd.
 - Build in my own spatialisation code?
