@@ -28,6 +28,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using AOT;
 
 #region UnityEvent types
 //------------------------------------------------------------------------------
@@ -994,6 +995,7 @@ public class LibPdInstance : MonoBehaviour
 	#region delegate definitions
 	//--------------------------------------------------------------------------
 	/// Receive print messages.
+	[MonoPInvokeCallback(typeof(LibPdPrintHook))]
 	private static void PrintOutput(string message)
 	{
 		if(pipePrintToConsoleStatic)
@@ -1002,6 +1004,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive bang messages.
+	[MonoPInvokeCallback(typeof(LibPdBangHook))]
 	private static void BangOutput(string symbol)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1010,6 +1013,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive float messages.
+	[MonoPInvokeCallback(typeof(LibPdFloatHook))]
 	private static void FloatOutput(string symbol, float val)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1018,6 +1022,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive symbol messages.
+	[MonoPInvokeCallback(typeof(LibPdSymbolHook))]
 	private static void SymbolOutput(string symbol, string val)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1026,6 +1031,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive lists.
+	[MonoPInvokeCallback(typeof(LibPdListHook))]
 	private static void ListOutput(string source, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
@@ -1036,6 +1042,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive messages.
+	[MonoPInvokeCallback(typeof(LibPdMessageHook))]
 	private static void MessageOutput(string source, string symbol, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
@@ -1046,6 +1053,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI note on messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiNoteOnHook))]
 	private static void MidiNoteOnOutput(int channel, int pitch, int velocity)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1054,6 +1062,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI control change messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiControlChangeHook))]
 	private static void MidiControlChangeOutput(int channel, int controller, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1062,6 +1071,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI program change messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiProgramChangeHook))]
 	private static void MidiProgramChangeOutput(int channel, int program)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1070,6 +1080,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI pitch bend messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiPitchBendHook))]
 	private static void MidiPitchBendOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1078,6 +1089,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI aftertouch messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiAftertouchHook))]
 	private static void MidiAftertouchOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1086,6 +1098,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI polyphonic aftertouch messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiPolyAftertouchHook))]
 	private static void MidiPolyAftertouchOutput(int channel, int pitch, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1094,6 +1107,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI byte messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiByteHook))]
 	private static void MidiByteOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
