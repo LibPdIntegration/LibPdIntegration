@@ -28,6 +28,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using AOT;
 
 #region UnityEvent types
 //------------------------------------------------------------------------------
@@ -113,153 +114,161 @@ public class LibPdInstance : MonoBehaviour
 {
 
 	#region libpd imports
+	
+	#if UNITY_IOS
+	private const string DLL_NAME="__Internal";
+	#else
+	private const string DLL_NAME="libpd";
+	#endif
+	
+	
 	//--------------------------------------------------------------------------
 	/// libpd functions that we need to be able to call from C#.
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_queued_init();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_queued_release();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_queued_receive_pd_messages();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_queued_receive_midi_messages();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_clear_search_path();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_add_to_search_path([In] [MarshalAs(UnmanagedType.LPStr)] string s);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern IntPtr libpd_new_instance();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_instance(IntPtr instance);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_free_instance(IntPtr instance);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_init_audio(int inChans, int outChans, int sampleRate);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern IntPtr libpd_openfile([In] [MarshalAs(UnmanagedType.LPStr)] string basename,
 												[In] [MarshalAs(UnmanagedType.LPStr)] string dirname);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_closefile(IntPtr p);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_getdollarzero(IntPtr p);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_process_float(int ticks,
 												  [In] float[] inBuffer,
 												  [Out] float[] outBuffer);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_blocksize();
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_start_message(int max_length);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_add_float(float x);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_add_symbol([In] [MarshalAs(UnmanagedType.LPStr)] string sym);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_finish_list([In] [MarshalAs(UnmanagedType.LPStr)] string recv);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_finish_message([In] [MarshalAs(UnmanagedType.LPStr)] string recv,
 												   [In] [MarshalAs(UnmanagedType.LPStr)] string msg);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_bang([In] [MarshalAs(UnmanagedType.LPStr)] string recv);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_float([In] [MarshalAs(UnmanagedType.LPStr)] string recv,
 										  float x);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_symbol([In] [MarshalAs(UnmanagedType.LPStr)] string recv,
 										   [In] [MarshalAs(UnmanagedType.LPStr)] string sym);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_exists([In] [MarshalAs(UnmanagedType.LPStr)] string obj);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern IntPtr libpd_bind([In] [MarshalAs(UnmanagedType.LPStr)] string symbol);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_unbind(IntPtr binding);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_verbose(int verbose);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_is_float(IntPtr atom);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_is_symbol(IntPtr atom);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern float libpd_get_float(IntPtr atom);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern IntPtr libpd_get_symbol(IntPtr atom);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern IntPtr libpd_next_atom(IntPtr atom);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_noteon(int channel,
 										   int pitch,
 										   int velocity);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_controlchange(int channel,
 												  int controller,
 												  int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_programchange(int channel, int program);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_pitchbend(int channel, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_aftertouch(int channel, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_polyaftertouch(int channel,
 												   int pitch,
 												   int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_midibyte(int port, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_sysex(int port, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_sysrealtime(int port, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_arraysize([In] [MarshalAs(UnmanagedType.LPStr)] string name);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_read_array([Out] float[] dest,
 											   [In] [MarshalAs(UnmanagedType.LPStr)] string src,
 											   int offset,
 											   int n);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_write_array([In] [MarshalAs(UnmanagedType.LPStr)] string dest,
 												int offset,
 												[In] float[] src,
@@ -277,7 +286,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdPrintHook([In] [MarshalAs(UnmanagedType.LPStr)] string message);
 
 	/// libpd function for setting the hook.
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_printhook(LibPdPrintHook hook);
 
 	/// Instance of the print hook, kept to ensure it doesn't get garbage
@@ -288,7 +297,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdBangHook([In] [MarshalAs(UnmanagedType.LPStr)] string symbol);
 	
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_banghook(LibPdBangHook hook);
 	
 	private LibPdBangHook bangHook;
@@ -298,7 +307,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdFloatHook([In] [MarshalAs(UnmanagedType.LPStr)] string symbol,
 										float val);
 	
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_floathook(LibPdFloatHook hook);
 	
 	private LibPdFloatHook floatHook;
@@ -308,7 +317,7 @@ public class LibPdInstance : MonoBehaviour
 	public delegate void LibPdSymbolHook([In] [MarshalAs(UnmanagedType.LPStr)] string symbol,
 										 [In] [MarshalAs(UnmanagedType.LPStr)] string val);
 	
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_symbolhook(LibPdSymbolHook hook);
 	
 	private LibPdSymbolHook symbolHook;
@@ -319,7 +328,7 @@ public class LibPdInstance : MonoBehaviour
 									   int argc,
 									   IntPtr argv);
 	
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_listhook(LibPdListHook hook);
 	
 	private LibPdListHook listHook;
@@ -331,7 +340,7 @@ public class LibPdInstance : MonoBehaviour
 										  int argc,
 										  IntPtr argv);
 	
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_messagehook(LibPdMessageHook hook);
 	
 	private LibPdMessageHook messageHook;
@@ -342,7 +351,7 @@ public class LibPdInstance : MonoBehaviour
 											 int pitch,
 											 int velocity);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_noteonhook(LibPdMidiNoteOnHook hook);
 
 	private LibPdMidiNoteOnHook noteOnHook;
@@ -353,7 +362,7 @@ public class LibPdInstance : MonoBehaviour
 													int controller,
 													int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_controlchangehook(LibPdMidiControlChangeHook hook);
 
 	private LibPdMidiControlChangeHook controlChangeHook;
@@ -362,7 +371,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdMidiProgramChangeHook(int channel, int program);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_programchangehook(LibPdMidiProgramChangeHook hook);
 
 	private LibPdMidiProgramChangeHook programChangeHook;
@@ -371,7 +380,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdMidiPitchBendHook(int channel, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_pitchbendhook(LibPdMidiPitchBendHook hook);
 
 	private LibPdMidiPitchBendHook pitchBendHook;
@@ -380,7 +389,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdMidiAftertouchHook(int channel, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_aftertouchhook(LibPdMidiAftertouchHook hook);
 
 	private LibPdMidiAftertouchHook aftertouchHook;
@@ -389,7 +398,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdMidiPolyAftertouchHook(int channel, int pitch, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_polyaftertouchhook(LibPdMidiPolyAftertouchHook hook);
 
 	private LibPdMidiPolyAftertouchHook polyAftertouchHook;
@@ -398,7 +407,7 @@ public class LibPdInstance : MonoBehaviour
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void LibPdMidiByteHook(int channel, int value);
 
-	[DllImport("libpd")]
+	[DllImport(DLL_NAME)]
 	private static extern void libpd_set_queued_midibytehook(LibPdMidiByteHook hook);
 
 	private LibPdMidiByteHook midiByteHook;
@@ -994,6 +1003,7 @@ public class LibPdInstance : MonoBehaviour
 	#region delegate definitions
 	//--------------------------------------------------------------------------
 	/// Receive print messages.
+	[MonoPInvokeCallback(typeof(LibPdPrintHook))]
 	private static void PrintOutput(string message)
 	{
 		if(pipePrintToConsoleStatic)
@@ -1002,6 +1012,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive bang messages.
+	[MonoPInvokeCallback(typeof(LibPdBangHook))]
 	private static void BangOutput(string symbol)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1010,6 +1021,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive float messages.
+	[MonoPInvokeCallback(typeof(LibPdFloatHook))]
 	private static void FloatOutput(string symbol, float val)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1018,6 +1030,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive symbol messages.
+	[MonoPInvokeCallback(typeof(LibPdSymbolHook))]
 	private static void SymbolOutput(string symbol, string val)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1026,6 +1039,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive lists.
+	[MonoPInvokeCallback(typeof(LibPdListHook))]
 	private static void ListOutput(string source, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
@@ -1036,6 +1050,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	/// Receive messages.
+	[MonoPInvokeCallback(typeof(LibPdMessageHook))]
 	private static void MessageOutput(string source, string symbol, int argc, IntPtr argv)
 	{
 		var args = ConvertList(argc, argv);
@@ -1046,6 +1061,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI note on messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiNoteOnHook))]
 	private static void MidiNoteOnOutput(int channel, int pitch, int velocity)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1054,6 +1070,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI control change messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiControlChangeHook))]
 	private static void MidiControlChangeOutput(int channel, int controller, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1062,6 +1079,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI program change messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiProgramChangeHook))]
 	private static void MidiProgramChangeOutput(int channel, int program)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1070,6 +1088,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI pitch bend messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiPitchBendHook))]
 	private static void MidiPitchBendOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1078,6 +1097,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI aftertouch messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiAftertouchHook))]
 	private static void MidiAftertouchOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1086,6 +1106,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI polyphonic aftertouch messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiPolyAftertouchHook))]
 	private static void MidiPolyAftertouchOutput(int channel, int pitch, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
@@ -1094,6 +1115,7 @@ public class LibPdInstance : MonoBehaviour
 
 	//--------------------------------------------------------------------------
 	///	Receive MIDI byte messages.
+	[MonoPInvokeCallback(typeof(LibPdMidiByteHook))]
 	private static void MidiByteOutput(int channel, int value)
 	{
 		foreach(LibPdInstance instance in activeInstances)
