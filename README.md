@@ -65,8 +65,7 @@ For a complete list of spatialisation methods, see the [Spatialisation](https://
 
 ## Future Plans
 
-- Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. This is complicated slightly by the fact that LibPdIntegration requires a [patch](extras/PatchInfo.md) to libpd ([included in this repository](extras/z_libpd.patch)), so any existing libpd binaries found on the internet will not work. The plan is to provide binaries for more platforms as time and resources allow.
-
+- Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. 
 - Expand the example project.
 
 - Gallery of projects using LibPdIntegration?
