@@ -61,12 +61,11 @@ For a complete list of spatialisation methods, see the [Spatialisation](https://
 
 - Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and [Pd-Extended](https://puredata.info/downloads/pd-extended) do not currently work (it's not clear yet whether this is a Unity-specific issue or an bug with LibPdIntegration).
 - Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new mutiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
-- ~~In order to get libpd working with Unity, a small [patch](extras/PatchInfo.md) to libpd is necessary ([included in this repository](extras/z_libpd.patch)). The native [Plugins](Assets/Plugins/) in this repository include this patch, but if you want to deploy to other platforms, you'll need to apply the patch yourself.~~ This should no longer be necessary with the latest version of libpd.
+- Patching libpd should no longer be necessary with the latest version of libpd.
 
 ## Future Plans
 
-- Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. This is complicated slightly by the fact that LibPdIntegration requires a [patch](extras/PatchInfo.md) to libpd ([included in this repository](extras/z_libpd.patch)), so any existing libpd binaries found on the internet will not work. The plan is to provide binaries for more platforms as time and resources allow.
-
+- Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. 
 - Expand the example project.
 
 - Gallery of projects using LibPdIntegration?
