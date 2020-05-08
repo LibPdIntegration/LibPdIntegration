@@ -18,23 +18,23 @@ LibPdIntegration is a wrapper for [libpd](http://libpd.cc/) developed at [Aberta
 LibPdIntegration offers a couple of features which set it apart from existing implementations of libpd for Unity:
 
 - It works with recent versions of Unity (at time of writing, tested on 2018.1 and 2019.1).
-- It supports multiple instances. This was impossible with previous implementations, as libpd itself did not support running multiple patches side by side. The libpd developers have recently removed that limitation however, meaning LibPdIntegration can allow developers to run multiple PD patches in their Unity projects. This also means it's now feasible to build a 3D scene in Unity with multiple PD patches all spatialised using Unity's audio code.
+- It supports multiple instances. This was impossible with previous implementations, as libpd itself did not support running multiple patches side by side. The libpd developers have recently removed that limitation however, meaning LibPdIntegration can allow developers to run multiple Pd patches in their Unity projects. This also means it's now feasible to build a 3D scene in Unity with multiple Pd patches all spatialised using Unity's audio code.
 
 ## Quickstart
 
-This repository contains everything you need to incorporate PD patches into your Unity project. First download it from the [releases](https://github.com/LibPdIntegration/LibPdIntegration/releases) page, then copy the contents of the [Assets](Assets/) folder into your project's Assets folder. LibPdIntegration provides native libpd binaries for supported platforms in the [Plugins](Assets/Plugins/) subfolder, and a single C# script, [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs) in the [Scripts](Assets/Scripts/) subfolder.
+This repository contains everything you need to incorporate Pd patches into your Unity project. First download it from the [releases](https://github.com/LibPdIntegration/LibPdIntegration/releases) page, then copy the contents of the [Assets](Assets/) folder into your project's Assets folder. LibPdIntegration provides native libpd binaries for supported platforms in the [Plugins](Assets/Plugins/) subfolder, and a single C# script, [LibPdInstance.cs](Assets/Scripts/LibPdInstance.cs) in the [Scripts](Assets/Scripts/) subfolder.
 
 PD patches should be placed in the [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder (you can create your own subfolders within).
 
-To associate a PD patch with a Unity GameObject, you need to add a single **Lib Pd Instance** Component to the GameObject. Doing this will also add an **Audio Source** Component; this is necessary because Unity does not process audio for GameObjects without an Audio Source.
+To associate a Pd patch with a Unity GameObject, you need to add a single **Lib Pd Instance** Component to the GameObject. Doing this will also add an **Audio Source** Component; this is necessary because Unity does not process audio for GameObjects without an Audio Source.
 
-**Lib Pd Instance** is our wrapper for libpd. To associate a PD patch with it, drag the patch from your [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder to the **Patch** selector in the Inspector.
+**Lib Pd Instance** is our wrapper for libpd. To associate a Pd patch with it, drag the patch from your [StreamingAssets/PdAssets](Assets/StreamingAssets/PdAssets/) folder to the **Patch** selector in the Inspector.
 
 ![LibPdInstance Inspector Patch Selector](docs/images/libpdinstance-patch.png)
 
 Note that the order of Components matters. **Audio Source** must come before **Lib Pd Instance**.
 
-The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your PD patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
+The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your Pd patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
 
 See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) and the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki) for more information, including how to communicate between Unity and libpd.
 
@@ -59,7 +59,7 @@ For a complete list of spatialisation methods, see the [Spatialisation](https://
 
 ## Caveats
 
-- Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and [Pd-Extended](https://puredata.info/downloads/pd-extended) do not currently work (it's not clear yet whether this is a Unity-specific issue or an bug with LibPdIntegration).
+- Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects (externals) included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and Pd-Extended (deprecated) do not currently work (it's not clear yet whether this is a Unity-specific issue or an bug with LibPdIntegration).
 - Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new mutiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
 - Patching libpd should no longer be necessary with the latest version of libpd.
 
@@ -75,7 +75,7 @@ For a complete list of spatialisation methods, see the [Spatialisation](https://
 - [Pure Data Main Site](https://puredata.info/)
 - [Pure Data Forum](https://forum.pdpatchrepo.info/)
 - [Pure Data Manual](http://write.flossmanuals.net/pure-data/introduction2/)
-- [Martin Brinkmann's PD Patches](http://www.martin-brinkmann.de/pd-patches.html)
+- [Martin Brinkmann's Pd Patches](http://www.martin-brinkmann.de/pd-patches.html)
 
 ## Credits
 
