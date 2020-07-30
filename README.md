@@ -11,13 +11,13 @@
 
 ## About
 
-LibPdIntegration is a wrapper for [libpd](http://libpd.cc/) developed at [Abertay University](http://www.abertay.ac.uk) for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows, OSX, and iOS (iOS support courtesy [thefuntastic](https://github.com/thefuntastic)).
+LibPdIntegration is a wrapper for [libpd](https://github.com/libpd/libpd) developed at [Abertay University](http://www.abertay.ac.uk) for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows, OSX, and iOS (iOS support courtesy [thefuntastic](https://github.com/thefuntastic)).
 
 ## Unique Features
 
 LibPdIntegration offers a couple of features which set it apart from existing implementations of libpd for Unity:
 
-- It works with recent versions of Unity (at time of writing, tested on 2018.1 and 2019.1).
+- It works with recent versions of Unity (at the time of writing, tested on **2018.4 LTS** and **2019.4 LTS**, though it should work on older versions too).
 - It supports multiple instances. This was impossible with previous implementations, as libpd itself did not support running multiple patches side by side. The libpd developers have recently removed that limitation however, meaning LibPdIntegration can allow developers to run multiple Pd patches in their Unity projects. This also means it's now feasible to build a 3D scene in Unity with multiple Pd patches all spatialised using Unity's audio code.
 
 ## Quickstart
@@ -40,7 +40,9 @@ See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegr
 
 ## Spatialisation
 
-There are a number of different methods for spatialising Pure Data patches in Unity. At the time of writing, the simplest method involves the use of one of Unity's included Spatializer plugins. 
+**Note:** This section's slightly out of date, as Unity no longer includes the **OculusSpatializer** plugin in its standard install. See the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki) for an alternative approach, and more info in general.
+
+There are a number of different methods for spatialising Pure Data patches in Unity. At the time of writing, the simplest method involves the use of one of Unity's included Spatializer plugins.
 
 For example, to use the **OculusSpatializer** plugin, you will first need to update your project settings:
 
@@ -59,9 +61,8 @@ For a complete list of spatialisation methods, see the [Spatialisation](https://
 
 ## Caveats
 
-- Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects (externals) included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and Pd-Extended (deprecated) do not currently work (it's not clear yet whether this is a Unity-specific issue or an bug with LibPdIntegration).
-- Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new mutiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
-- Patching libpd should no longer be necessary with the latest version of libpd.
+- Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects (externals) included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and Pd-Extended (deprecated) do not currently work. See [issue 14](https://github.com/LibPdIntegration/LibPdIntegration/issues/14) for an explanation of why this is; it will hopefully be resolved in a future release.
+- Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new multiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
 
 ## Future Plans
 

@@ -518,7 +518,7 @@ public class LibPdInstance : MonoBehaviour
 	void Awake()
 	{
 		// Initialise libpd, if it's not already.
-		if(!pdInitialised)
+		if (!pdInitialised)
 		{
 			// Setup hooks.
 			printHook = new LibPdPrintHook(PrintOutput);
@@ -636,14 +636,26 @@ public class LibPdInstance : MonoBehaviour
 			}
 		}
 	}
-	
+
+	//--------------------------------------------------------------------------
+	///	We only add ourselves to activeInstances when we're enabled.
+	void OnEnable()
+	{
+		if(!pdFail && !patchFail)
+			activeInstances.Add(this);
+	}
+
+	//--------------------------------------------------------------------------
+	///	Remove ourselves from activeInstances if we're disabled.
+	void OnDisable()
+	{
+		activeInstances.Remove(this);
+	}
+
 	//--------------------------------------------------------------------------
 	/// Close the patch file on quit.
-	void OnApplicationQuit()
+	void OnDestroy()
 	{
-		//Remove from our list of active instances before we do anything else.
-		activeInstances.Remove(this);
-
 		if(!pdFail && !patchFail)
 		{
 			libpd_set_instance(instance);
@@ -665,6 +677,8 @@ public class LibPdInstance : MonoBehaviour
 			bindings.Clear();
 
 			libpd_closefile(patchPointer);
+
+			libpd_free_instance(instance);
 		}
 
 		//If we're the last instance left, release libpd's ringbuffer.
