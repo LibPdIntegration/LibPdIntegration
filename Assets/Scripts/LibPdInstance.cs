@@ -582,9 +582,6 @@ public class LibPdInstance : MonoBehaviour
 		else
 			pipePrintToConsole = pipePrintToConsoleStatic;
 
-		//Add to our list of active instances.
-		activeInstances.Add(this);
-
 		// Calc numTicks.
 		int bufferSize;
 		int noOfBuffers;
