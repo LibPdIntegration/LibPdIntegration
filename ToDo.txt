@@ -1,5 +1,6 @@
 LibPdIntegration ToDo
 ---------------------
+
 v2.0.3 ToDo:
 ---------------
 - Update README.md.
@@ -8,7 +9,9 @@ v2.0.3 ToDo:
 - Re-take screenshots.
 - Verify linux libraries are working.
 - See if it's possible to build libpd using Unity's own toolchain (IL2CPP).
-- Are we still targeting the latest Unity LTS version?
+- Verify it works in 2018.4 & 2019.4.
+- Use pd.dll instead of libpd.dll.
+	- Does this fix externals without me needing to re-build the lib?
 
 - Create singleton LibPdManager class to handle all of the global operations
   libpd requires us to work with.

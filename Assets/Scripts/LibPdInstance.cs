@@ -661,14 +661,6 @@ public class LibPdInstance : MonoBehaviour
 			libpd_add_float(0.0f);
 			libpd_finish_message("pd", "dsp");
 
-			//TODO: Is this correct? What happens if one LibPdInstance is
-			//destroyed while another stays alive?
-			if(printHook != null)
-			{
-				printHook = null;
-				libpd_set_queued_printhook(printHook);
-			}
-
 			foreach(var ptr in bindings.Values)
 				libpd_unbind(ptr);
 			bindings.Clear();
@@ -681,6 +673,12 @@ public class LibPdInstance : MonoBehaviour
 		//If we're the last instance left, release libpd's ringbuffer.
 		if(pdInitialised && (activeInstances.Count < 1))
 		{
+			if(printHook != null)
+			{
+				printHook = null;
+				libpd_set_queued_printhook(printHook);
+			}
+
 			libpd_queued_release();
 
 			pdInitialised = true;
