@@ -10,6 +10,7 @@ v2.0.3 ToDo:
 - Verify linux libraries are working.
 - See if it's possible to build libpd using Unity's own toolchain (IL2CPP).
 - Verify it works in 2018.4 & 2019.4.
+- Write up generic libpd build instructions on wiki.
 
 - Support use of externals on Windows. This apparently requires us to rename
   libpd.dll to pd.dll, but that alone does not seem to allow externals to
