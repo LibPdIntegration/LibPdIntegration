@@ -114,12 +114,17 @@ public class LibPdInstance : MonoBehaviour
 {
 
 	#region libpd imports
-	
-	#if UNITY_IOS
+
+#if UNITY_IOS
 	private const string DLL_NAME="__Internal";
-	#else
+//The following lines will be needed if we can get externals working on Windows.
+//Just renaming libpd.dll to pd.dll does not seem to be enough though, so
+//they're commented out for now.
+//#elif UNITY_STANDALONE_WIN
+//	private const string DLL_NAME="pd";
+#else
 	private const string DLL_NAME="libpd";
-	#endif
+#endif
 	
 	
 	//--------------------------------------------------------------------------
