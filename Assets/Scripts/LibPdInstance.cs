@@ -686,7 +686,7 @@ public class LibPdInstance : MonoBehaviour
 
 			libpd_queued_release();
 
-			pdInitialised = true;
+			pdInitialised = false;
 		}
 	}
 	
@@ -784,9 +784,14 @@ public class LibPdInstance : MonoBehaviour
 	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void UnBind(string symbol)
 	{
-		libpd_set_instance(instance);
-		libpd_unbind(bindings[symbol]);
-		bindings.Remove(symbol);
+		//Don't try and unbind a symbol that doesn't exist in our bindings
+		//dictionary.
+		if(bindings.ContainsKey(symbol))
+		{
+			libpd_set_instance(instance);
+			libpd_unbind(bindings[symbol]);
+			bindings.Remove(symbol);
+		}
 	}
 
 	//--------------------------------------------------------------------------

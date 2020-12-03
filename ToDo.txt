@@ -1,17 +1,10 @@
 LibPdIntegration ToDo
 ---------------------
-
-v2.1.0 ToDo:
----------------
-- See if it's possible to build libpd using Unity's own toolchain (IL2CPP).
-
 - Support use of externals on Windows. This apparently requires us to rename
   libpd.dll to pd.dll, but that alone does not seem to allow externals to
   load. I don't know what the actual problem is :(
 - Create singleton LibPdManager class to handle all of the global operations
   libpd requires us to work with.
-- printHook deletion in OnApplicationQuit()?
-- Linux build of libpd.
 - Build in my own spatialisation code?
 - Should I separate the LibPD stuff out from the MonoBehaviour?
     - I do like the single-file approach for a library.
