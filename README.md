@@ -49,12 +49,15 @@ The necessary steps are:
 **In Unity:**
 
 1. Set the **Audio Source**'s **AudioClip** to our *SpatialiserFix.wav* sound file.
+
    ![Audio Source AudioClip set to SpatialiserFix.wav](docs/images/spatialiserfix-audioclip.png)
 
 2. Ensure the **Audio Source** is set to **Play On Awake** and **Loop**.
+
    ![Audio Source Play On Awake and Loop set to true](docs/images/spatialiserfix-loop.png)
 
 3. Set **Spatial Blend** to 1(_3D_).
+
    ![Audio Source Spatial Blend slider set to 3D](docs/images/spatialiserfix-spatialblend.png)
 
 **In Pure Data:**
