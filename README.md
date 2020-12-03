@@ -11,7 +11,7 @@
 
 ## About
 
-LibPdIntegration is a wrapper for [libpd](https://github.com/libpd/libpd) developed at [Abertay University](http://www.abertay.ac.uk) for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows, OSX, and iOS (iOS support courtesy [thefuntastic](https://github.com/thefuntastic)).
+LibPdIntegration is a wrapper for [libpd](https://github.com/libpd/libpd) developed at [Abertay University](http://www.abertay.ac.uk) for incorporating [Pure Data](https://puredata.info/) patches into [Unity](https://unity3d.com/). It currently supports Windows, OSX, Linux, and iOS (iOS support courtesy [thefuntastic](https://github.com/thefuntastic)).
 
 ## Unique Features
 
@@ -40,24 +40,29 @@ See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegr
 
 ## Spatialisation
 
-**Note:** This section's slightly out of date, as Unity no longer includes the **OculusSpatializer** plugin in its standard install. See the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki) for an alternative approach, and more info in general.
+Spatialisation of Pure Data patches in Unity is a little convoluted. The following describes a method that does not require any external frameworks, but do check out the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the wiki if you happen to be using an external audio framework like [Steam Audio](https://valvesoftware.github.io/steam-audio/). The process is a bit more straightforward in that case.
 
-There are a number of different methods for spatialising Pure Data patches in Unity. At the time of writing, the simplest method involves the use of one of Unity's included Spatializer plugins.
+For this method we need to use a special sound file ([included in this repository](https://github.com/LibPdIntegration/LibPdIntegration/blob/master/extras/SpatialiserFix.wav)) in our **Audio Source**, and use an **`adc~`** object in our PD patch to apply the **Audio Source** spatialisation to the output of our PD patch.
 
-For example, to use the **OculusSpatializer** plugin, you will first need to update your project settings:
+The necessary steps are:
 
-1. *Edit -> Project Settings... -> Audio*.
-2. Set **Spatializer Plugin** to **OculusSpatializer**.
+**In Unity:**
 
-![Unity Audio Settings: Spatializer Plugin](docs/images/spatializerplugin.png)
+1. Set the **Audio Source**'s **AudioClip** to our *SpatialiserFix.wav* sound file.
+   ![Audio Source AudioClip set to SpatialiserFix.wav](docs/images/spatialiserfix-audioclip.png)
 
-Then, for each **Audio Source** in your scene, set the **Spatial Blend** slider to 1(_3D_), and toggle the **Spatialize** and **Spatialize Post Effects** options:
+2. Ensure the **Audio Source** is set to **Play On Awake** and **Loop**.
+   ![Audio Source Play On Awake and Loop set to true](docs/images/spatialiserfix-loop.png)
 
-![Audio Source Spatial Blend slider](docs/images/spatialiserfix-spatialblend.png)
+3. Set **Spatial Blend** to 1(_3D_).
+   ![Audio Source Spatial Blend slider set to 3D](docs/images/spatialiserfix-spatialblend.png)
 
-![Audio Source Spatialize toggles](docs/images/spatializeposteffects.png)
+**In Pure Data:**
 
-For a complete list of spatialisation methods, see the [Spatialisation](https://github.com/LibPdIntegration/LibPdIntegration/wiki/spatialisation) page on the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki).
+Multiply the output of your patch with the stereo input from an **`adc~`** object, like the section highlighted in blue here:
+![Pure Data adc~ object output](docs/images/spatialiserfix-adc.png)
+
+This will effectively apply the spatialisation that Unity applies to Audio Sources by default, to the output of our PD patch. For more information, see the [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) project, and particularly the comments in the [_FilteredNoise-ADC.pd_](https://github.com/LibPdIntegration/LibPdIntegrationExamples/blob/master/Assets/StreamingAssets/PdAssets/SpatialisationPatches/FilteredNoise-ADC.pd) patch.
 
 ## Caveats
 
