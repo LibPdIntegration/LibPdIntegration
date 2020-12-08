@@ -81,28 +81,6 @@ public class IntIntEvent : UnityEvent<int, int> {}
 /// Along those lines, I modelled parts of this class after the C# bindings, so
 /// you will likely see some duplicated code.
 /// 
-/// Also, as it stands, this requires a small patch to z_libpd.c to allow us to
-/// install our own print hook (so we can pipe print messages to Unity's
-/// Console). Unfortunately, libpd requires the print hook to be set up before
-/// libpd_init() is called, and will not accept any changes after that.
-/// 
-/// This causes major problems with Unity, as we want to set the print hook when
-/// we start our game, and clear it when the game exits. However, because Unity
-/// keeps native dlls active as long as the editor is running, libpd_init()
-/// (being a one-time function) will effectively never get called again, and the
-/// print hook will remain set to the value set when we first ran our game from
-/// the editor. The result: if we try to run our game from the editor a second
-/// time, we crash the entire editor.
-/// 
-/// For this reason the repository for this code includes pre-built libpd
-/// binaries which include the print hook patch.
-/// 
-/// If you're building libpd from source yourself, you can get around this issue
-/// by adding the following line to the end of libpd_set_printhook() in
-/// z_libpd.c:
-/// 
-/// sys_printhook = libpd_printhook;
-/// 
 /// 
 /// Note: LibPdInstance is all implemented as a single file because I find
 /// single file libraries easier to integrate into my own projects. This may
