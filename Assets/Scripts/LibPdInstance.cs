@@ -492,7 +492,7 @@ public class LibPdInstance : MonoBehaviour
 		/// UnityEvent that will be invoked whenever we recieve a message from the PD patch.
 		public StringStringObjArrEvent Message;
 	};
-	[Header("libpd -> Unity Events")]
+	[Header("libpd → Unity Events")]
 	public PureDataEvents pureDataEvents;
 	
 	/// Events placed in a struct so they don't clutter up the Inspector by default.
