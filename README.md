@@ -70,7 +70,12 @@ This will effectively apply the spatialisation that Unity applies to Audio Sourc
 ## Caveats
 
 - Only [Pure Data Vanilla](https://puredata.info/downloads/pure-data) is supported. Additional objects (externals) included with distributions like [Purr Data](https://puredata.info/downloads/purr-data) and Pd-Extended (deprecated) do not currently work. See [issue 14](https://github.com/LibPdIntegration/LibPdIntegration/issues/14) for an explanation of why this is; it will hopefully be resolved in a future release.
+
 - Although libpd provides C# bindings, 1.) I could not get them to play nicely with Unity, and 2.) they don't currently support libpd's new multiple instance system. As such, LibPdIntegration interfaces directly with the libpd C library. This may change if libpd's C# bindings get updated in the future, but they should be functionally identical to the C library anyway, so I'm not sure it's necessary.
+
+- **`readsf~`** does not work. This is due to a bug in pure data. At the time of writing there's a [pull request](https://github.com/pure-data/pure-data/pull/1227) that should fix it; once that's been approved I'll try and get new libpd binaries built (anyone who can contribute OSX, Linux and iOS binaries please let me know!).
+
+  In the meantime, you can work around the problem by using **`soundfiler`** instead of **`readsf~`**.
 
 ## Future Plans
 
