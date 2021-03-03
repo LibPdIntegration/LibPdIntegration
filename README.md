@@ -81,8 +81,11 @@ This will effectively apply the spatialisation that Unity applies to Audio Sourc
 
 - Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to. 
 - Expand the example project.
-
 - Gallery of projects using LibPdIntegration?
+
+## Related Projects
+
+- [black and secret places:](https://github.com/NiallMoody/black-and-secret-places) A project where myself ([Niall Moody](http://www.niallmoody.com/)) and [Yann Seznec](https://www.yannseznec.com/) are taking turns streaming the audio implementation using Pure Data and LibPdIntegration. You can view the stream playlist [here](https://www.youtube.com/playlist?list=PL9mtAkCrEZavP0T_C4mLqKdxYD-4wURoZ), and if you want to follow along at home you can download releases for each stream from the [github page](https://github.com/NiallMoody/black-and-secret-places).
 
 ## Pure Data Resources
 
