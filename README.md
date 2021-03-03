@@ -85,6 +85,8 @@ This will effectively apply the spatialisation that Unity applies to Audio Sourc
 
 ## Related Projects
 
+- [LibPdIntegration Examples:](https://github.com/LibPdIntegration/LibPdIntegrationExamples) An example Unity project demonstrating how to use LibPdIntegration.
+- [LibPdIntegration Tests:](https://github.com/LibPdIntegration/LibPdIntegrationTests) Internal project used to verify LibPdIntegration is working correctly.
 - [black and secret places:](https://github.com/NiallMoody/black-and-secret-places) A project where myself ([Niall Moody](http://www.niallmoody.com/)) and [Yann Seznec](https://www.yannseznec.com/) are taking turns streaming the audio implementation using Pure Data and LibPdIntegration. You can view the stream playlist [here](https://www.youtube.com/playlist?list=PL9mtAkCrEZavP0T_C4mLqKdxYD-4wURoZ), and if you want to follow along at home you can download releases for each stream from the [github page](https://github.com/NiallMoody/black-and-secret-places).
 
 ## Pure Data Resources
