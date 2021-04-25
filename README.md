@@ -17,7 +17,7 @@ LibPdIntegration is a wrapper for [libpd](https://github.com/libpd/libpd) develo
 
 LibPdIntegration offers a couple of features which set it apart from existing implementations of libpd for Unity:
 
-- It works with recent versions of Unity (at the time of writing, tested on **2018.4 LTS** and **2019.4 LTS**, though it should work on older versions too).
+- It works with recent versions of Unity (at the time of writing, tested on **2018.4 LTS**, **2019.4 LTS** and **2020.3 LTS**, though it should work on older versions too).
 - It supports multiple instances. This was impossible with previous implementations, as libpd itself did not support running multiple patches side by side. The libpd developers have recently removed that limitation however, meaning LibPdIntegration can allow developers to run multiple Pd patches in their Unity projects. This also means it's now feasible to build a 3D scene in Unity with multiple Pd patches all spatialised using Unity's audio code.
 
 ## Quickstart
@@ -37,6 +37,10 @@ Note that the order of Components matters. **Audio Source** must come before **L
 The **Pipe Print To Console** toggle provided by **Lib Pd Instance** lets you pipe any **print** messages sent by your Pd patch to Unity's console for debugging purposes. Note that due to a limitation with libpd, this toggle is global. i.e. if you activate it for one **Lib Pd Instance**, it will be active for all **Lib Pd Instances**.
 
 See the sister project [LibPdIntegrationExamples](https://github.com/LibPdIntegration/LibPdIntegrationExamples) and the [wiki](https://github.com/LibPdIntegration/LibPdIntegration/wiki) for more information, including how to communicate between Unity and libpd.
+
+**Note:** If building for mac, Unity may complain about conflicting versions of libpd. This is because Unity mistakenly assumes the 64-bit Linux lipbd binary is actually a mac binary. To rectify the issue, select the 64-bit linux binary (*Assets/Plugins/x64/libpd.so*) and uncheck the **Mac OS X x64** toggle in the Inspector to match the following image, then click **Apply**:
+
+![Correct Inspector settings for the 64-bit libpd Linux binary](docs/images/osx-linux-binary-exclusion.png)
 
 ## Spatialisation
 
