@@ -448,6 +448,8 @@ public class LibPdInstance : MonoBehaviour
 	private bool pdFail = false;
 	/// True if we were unable to open our patch.
 	private bool patchFail = false;
+	///	True if we have successfully loaded our patch.
+	private bool loaded = false;
 
 	/// Global variable used to ensure we don't initialise LibPd more than once.
 	private static bool pdInitialised = false;
@@ -613,6 +615,9 @@ public class LibPdInstance : MonoBehaviour
 				libpd_start_message(1);
 				libpd_add_float(1.0f);
 				libpd_finish_message("pd", "dsp");
+
+				if(!patchFail)
+					loaded = true;
 			}
 		}
 	}
@@ -621,7 +626,7 @@ public class LibPdInstance : MonoBehaviour
 	///	We only add ourselves to activeInstances when we're enabled.
 	void OnEnable()
 	{
-		if(!pdFail && !patchFail)
+		if(!pdFail && !patchFail && loaded)
 			activeInstances.Add(this);
 	}
 
@@ -636,7 +641,7 @@ public class LibPdInstance : MonoBehaviour
 	/// Close the patch file on quit.
 	void OnDestroy()
 	{
-		if(!pdFail && !patchFail)
+		if(!pdFail && !patchFail && loaded)
 		{
 			libpd_set_instance(instance);
 
@@ -731,7 +736,7 @@ public class LibPdInstance : MonoBehaviour
 	/// Process audio.
 	void OnAudioFilterRead(float[] data, int channels)
 	{
-		if(!pdFail && !patchFail)
+		if(!pdFail && !patchFail && loaded)
 		{
 			libpd_set_instance(instance);
 			libpd_process_float(numTicks, data, data);
