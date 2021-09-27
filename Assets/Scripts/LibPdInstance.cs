@@ -135,6 +135,9 @@ public class LibPdInstance : MonoBehaviour
 	private static extern void libpd_free_instance(IntPtr instance);
 
 	[DllImport(DLL_NAME)]
+	private static extern IntPtr libpd_this_instance();
+
+	[DllImport(DLL_NAME)]
 	private static extern int libpd_init_audio(int inChans, int outChans, int sampleRate);
 
 	[DllImport(DLL_NAME)]
@@ -503,7 +506,7 @@ public class LibPdInstance : MonoBehaviour
 	void Awake()
 	{
 		// Initialise libpd, if it's not already.
-		if (!pdInitialised)
+		if(!pdInitialised)
 		{
 			// Setup hooks.
 			printHook = new LibPdPrintHook(PrintOutput);

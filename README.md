@@ -96,7 +96,7 @@ This will effectively apply the spatialisation that Unity applies to Audio Sourc
 
 As mentioned above, libpd has to be built separately for every platform you want to deploy to. As the sole maintainer I (Niall Moody) currently only have access to a Windows machine, and have to rely on contributions from other people in order to support other platforms.
 
-One thing I would like to do is set up a schedule for updating the repo's libpd binaries to better track libpd/pure data's own release schedules. In order to do that though, I'll need other people to step up and maintain the non-Windows platforms. This should be a straightforward process of just building the latest libpd every 6 months or so.
+One thing I would like to do is set up a schedule for updating the repo's libpd binaries to better track libpd/pure data's own release schedules. In order to do that though, I'll need other people to step up and maintain the non-Windows platforms. This *should* be a straightforward process of just building the latest libpd every 6 months or so.
 
 If you're interested and available, please [get in touch](https://github.com/LibPdIntegration/LibPdIntegration/issues/20).
 
