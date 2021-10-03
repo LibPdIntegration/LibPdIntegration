@@ -135,9 +135,6 @@ public class LibPdInstance : MonoBehaviour
 	private static extern void libpd_free_instance(IntPtr instance);
 
 	[DllImport(DLL_NAME)]
-	private static extern IntPtr libpd_this_instance();
-
-	[DllImport(DLL_NAME)]
 	private static extern int libpd_init_audio(int inChans, int outChans, int sampleRate);
 
 	[DllImport(DLL_NAME)]
@@ -264,7 +261,7 @@ public class LibPdInstance : MonoBehaviour
 	#region libpd delegate/callback declarations
 	//--------------------------------------------------------------------------
 	//-Print hook---------------------------------------------------------------
-	// We don't make the print hook publicly available (for now), so it's just a
+	//We don't make the print hook publicly available (for now), so it's just a
 	//single static delegate.
 
 	/// Delegate/function pointer type.
@@ -440,12 +437,15 @@ public class LibPdInstance : MonoBehaviour
 
 	///	We use this to ensure libpd -> Unity events get sent to all LibPdInstances.
 	/*!
-		It's also used to ensure libpd_queued_release() only gets called once
-		all LibPdInstances have been destroyed.
+		IMPORTANT: Bear in mind that C#'s List is not thread-safe. That's not a
+		problem for the way we're using it at the time of writing, because
+		activeInstances only gets accessed from the main thread in OnEnable,
+		OnDisable and the various BangOutput, FloatOutput, etc. delegates that
+		themselves get called from Update.
+
+		activeInstances should *NEVER* be accessed from the audio thread though.
 	 */
 	private static List<LibPdInstance> activeInstances = new List<LibPdInstance>();
-	///	The WeakReference pointing to ourselves in activeInstances.
-	//private WeakReference instanceReference;
 
 	/// True if we were unable to intialise Pd's audio processing.
 	private bool pdFail = false;
@@ -454,8 +454,10 @@ public class LibPdInstance : MonoBehaviour
 	///	True if we have successfully loaded our patch.
 	private bool loaded = false;
 
-	/// Global variable used to ensure we don't initialise LibPd more than once.
+	/// Global variable used to ensure we don't initialise libpd more than once.
 	private static bool pdInitialised = false;
+	/// Global reference count used to determine when to un-initialise libpd.
+	private static int numInstances = 0;
 	#endregion
 
 	#region events
@@ -505,10 +507,10 @@ public class LibPdInstance : MonoBehaviour
 	/// Initialise LibPd.
 	void Awake()
 	{
-		// Initialise libpd, if it's not already.
+		//Initialise libpd, if it's not already.
 		if(!pdInitialised)
 		{
-			// Setup hooks.
+			//Setup hooks.
 			printHook = new LibPdPrintHook(PrintOutput);
 			libpd_set_queued_printhook(printHook);
 			
@@ -548,7 +550,7 @@ public class LibPdInstance : MonoBehaviour
 			midiByteHook = new LibPdMidiByteHook(MidiByteOutput);
 			libpd_set_queued_midibytehook(midiByteHook);
 
-			// Initialise libpd if possible, report any errors.
+			//Initialise libpd if possible, report any errors.
 			int initErr = libpd_queued_init();
 			if(initErr != 0)
 			{
@@ -557,33 +559,33 @@ public class LibPdInstance : MonoBehaviour
 			}
 			pdInitialised = true;
 			
-			// Try and add the patch directory to libpd's search path for
-			// loading externals (still can't seem to load externals when
-			// running in Unity though).
+			//Try and add the patch directory to libpd's search path for
+			//loading externals (still can't seem to load externals when
+			//running in Unity though).
 			if(patchDir != String.Empty)
 				libpd_add_to_search_path(Application.streamingAssetsPath + patchDir);
 
-			// Make sure our static pipePrintToConsole variable is set
-			// correctly.
+			//Make sure our static pipePrintToConsole variable is set
+			//correctly.
 			pipePrintToConsoleStatic = pipePrintToConsole;
 		}
 		else
 			pipePrintToConsole = pipePrintToConsoleStatic;
 
-		// Calc numTicks.
+		//Calc numTicks.
 		int bufferSize;
 		int noOfBuffers;
 
 		AudioSettings.GetDSPBufferSize (out bufferSize, out noOfBuffers);
 		numTicks = bufferSize/libpd_blocksize();
 
-		// Create our instance.
+		//Create our instance.
 		instance = libpd_new_instance();
 
-		// Set our instance.
+		//Set our instance.
 		libpd_set_instance(instance);
 
-		// Initialise audio.
+		//Initialise audio.
 		int err = libpd_init_audio(2, 2, AudioSettings.outputSampleRate);
 		if(err != 0)
 		{
@@ -602,7 +604,7 @@ public class LibPdInstance : MonoBehaviour
 				//Create our bindings dictionary.
 				bindings = new Dictionary<string, IntPtr>();
 
-				// Open our patch.
+				//Open our patch.
 				patchPointer = libpd_openfile(patchName + ".pd",
 											  Application.streamingAssetsPath + patchDir);
 				if(patchPointer == IntPtr.Zero)
@@ -614,13 +616,16 @@ public class LibPdInstance : MonoBehaviour
 					patchFail = true;
 				}
 
-				// Turn on audio processing.
+				//Turn on audio processing.
 				libpd_start_message(1);
 				libpd_add_float(1.0f);
 				libpd_finish_message("pd", "dsp");
 
 				if(!patchFail)
+				{
 					loaded = true;
+					++numInstances;
+				}
 			}
 		}
 	}
@@ -661,8 +666,10 @@ public class LibPdInstance : MonoBehaviour
 			libpd_free_instance(instance);
 		}
 
+		--numInstances;
+
 		//If we're the last instance left, release libpd's ringbuffer.
-		if(pdInitialised && (activeInstances.Count < 1))
+		if(pdInitialised && (numInstances < 1))
 		{
 			if(printHook != null)
 			{
@@ -949,7 +956,7 @@ public class LibPdInstance : MonoBehaviour
 	{
 		libpd_set_instance(instance);
 
-		if (libpd_sysrealtime(port, value) != 0)
+		if(libpd_sysrealtime(port, value) != 0)
 			Debug.LogWarning(gameObject.name + "::SendMidiSysRealtime(): input parameter(s) out of range. port = " + port + " value = " + value);
 	}
 
