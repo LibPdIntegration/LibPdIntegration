@@ -576,7 +576,7 @@ public class LibPdInstance : MonoBehaviour
 		int bufferSize;
 		int noOfBuffers;
 
-		AudioSettings.GetDSPBufferSize (out bufferSize, out noOfBuffers);
+		AudioSettings.GetDSPBufferSize(out bufferSize, out noOfBuffers);
 		numTicks = bufferSize/libpd_blocksize();
 
 		//Create our instance.
@@ -588,7 +588,10 @@ public class LibPdInstance : MonoBehaviour
 		//Initialise audio.
 		int numSpeakers = 2;
 
-		switch(AudioSettings.speakerMode)
+		if(AudioSettings.driverCapabilities != AudioSettings.speakerMode)
+			Debug.LogWarning("LibPdInstance Warning: Soundcard driver capabilities do match the selected speaker mode. Using speaker mode: " + AudioSettings.driverCapabilities);
+
+		switch(AudioSettings.driverCapabilities)
 		{
 			case AudioSpeakerMode.Mono:
 				numSpeakers = 1;
