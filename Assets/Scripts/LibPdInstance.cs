@@ -586,41 +586,18 @@ public class LibPdInstance : MonoBehaviour
 		libpd_set_instance(instance);
 
 		//Initialise audio.
-		int numSpeakers = 2;
+		int requestedNumSpeakers = GetNumSpeakers(AudioSettings.speakerMode);
+		int availableNumSpeakers = GetNumSpeakers(AudioSettings.driverCapabilities);
 
-		if(AudioSettings.driverCapabilities != AudioSettings.speakerMode)
-			Debug.LogWarning("LibPdInstance Warning: Soundcard driver capabilities do match the selected speaker mode. Using speaker mode: " + AudioSettings.driverCapabilities);
-
-		switch(AudioSettings.driverCapabilities)
+		if(requestedNumSpeakers > availableNumSpeakers)
 		{
-			case AudioSpeakerMode.Mono:
-				numSpeakers = 1;
-				break;
-			case AudioSpeakerMode.Stereo:
-				numSpeakers = 2;
-				break;
-			case AudioSpeakerMode.Quad:
-				numSpeakers = 4;
-				break;
-			case AudioSpeakerMode.Surround:
-				numSpeakers = 5;
-				break;
-			case AudioSpeakerMode.Mode5point1:
-				numSpeakers = 6;
-				break;
-			case AudioSpeakerMode.Mode7point1:
-				numSpeakers = 8;
-				break;
-			case AudioSpeakerMode.Prologic:
-				//TODO: If I understand the Unity docs correctly, it will be
-				//impossible for us to spatialise patches if speakerMode is set
-				//to Prologic. So this option may not be particularly useful.
-				numSpeakers = 2;
-				break;
+			Debug.LogWarning("LibPdInstance Warning: Soundcard does not support speaker mode: " + AudioSettings.speakerMode + " Using mode: " + AudioSettings.driverCapabilities + " instead.");		
+
+			requestedNumSpeakers = availableNumSpeakers;
 		}
 
-		int err = libpd_init_audio(numSpeakers,
-								   numSpeakers,
+		int err = libpd_init_audio(requestedNumSpeakers,
+								   requestedNumSpeakers,
 								   AudioSettings.outputSampleRate);
 		if(err != 0)
 		{
@@ -1215,6 +1192,43 @@ public class LibPdInstance : MonoBehaviour
 
 			if(i < (argc-1))
 				argv = libpd_next_atom(argv);
+		}
+
+		return retval;
+	}
+
+	//--------------------------------------------------------------------------
+	///	Helper method. Returns the number of speakers for a given speakerMode.
+	int GetNumSpeakers(AudioSpeakerMode mode)
+	{
+		int retval = 2;
+
+		switch(mode)
+		{
+			case AudioSpeakerMode.Mono:
+				retval = 1;
+				break;
+			case AudioSpeakerMode.Stereo:
+				retval = 2;
+				break;
+			case AudioSpeakerMode.Quad:
+				retval = 4;
+				break;
+			case AudioSpeakerMode.Surround:
+				retval = 5;
+				break;
+			case AudioSpeakerMode.Mode5point1:
+				retval = 6;
+				break;
+			case AudioSpeakerMode.Mode7point1:
+				retval = 8;
+				break;
+			case AudioSpeakerMode.Prologic:
+				//TODO: If I understand the Unity docs correctly, it will be
+				//impossible for us to spatialise patches if speakerMode is set
+				//to Prologic. So this option may not be particularly useful.
+				retval = 2;
+				break;
 		}
 
 		return retval;
