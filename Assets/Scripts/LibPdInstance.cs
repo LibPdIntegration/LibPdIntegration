@@ -507,8 +507,16 @@ public class LibPdInstance : MonoBehaviour
 	/// Initialise LibPd.
 	void Awake()
 	{
+		//Initialise libpd if possible, report any errors.
+		int initErr = libpd_queued_init();
+		if (initErr != 0)
+		{
+			Debug.LogWarning("Warning; libpd_init() returned " + initErr);
+			Debug.LogWarning("(if you're running this in the editor that probably just means this isn't the first time you've run your game, and is not a problem)");
+		}
+
 		//Initialise libpd, if it's not already.
-		if(!pdInitialised)
+		if (!pdInitialised)
 		{
 			//Setup hooks.
 			printHook = new LibPdPrintHook(PrintOutput);
@@ -550,13 +558,6 @@ public class LibPdInstance : MonoBehaviour
 			midiByteHook = new LibPdMidiByteHook(MidiByteOutput);
 			libpd_set_queued_midibytehook(midiByteHook);
 
-			//Initialise libpd if possible, report any errors.
-			int initErr = libpd_queued_init();
-			if(initErr != 0)
-			{
-				Debug.LogWarning("Warning; libpd_init() returned " + initErr);
-				Debug.LogWarning("(if you're running this in the editor that probably just means this isn't the first time you've run your game, and is not a problem)");
-			}
 			pdInitialised = true;
 			
 			//Try and add the patch directory to libpd's search path for
