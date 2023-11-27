@@ -9,8 +9,6 @@ If you would like to take ownership, please get in touch. I no longer have the t
 - [Quickstart](#quickstart)
 - [Spatialisation](#spatialisation)
 - [Caveats](#caveats)
-- [Future Plans](#future-plans)
-- **[!!! Help Wanted !!!](#help-wanted)**
 - [Related Projects](#related-projects)
 - [Pure Data Resources](#pure-data-resources)
 - [Credits](#credits)
