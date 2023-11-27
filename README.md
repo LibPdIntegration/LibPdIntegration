@@ -1,5 +1,9 @@
 # LibPd Unity Integration
 
+## Note: this repository is no longer maintained
+
+If you would like to take ownership, please get in touch. I no longer have the time or resources to maintain it myself.
+
 - [About](#about)
 - [Unique Features](#unique-features)
 - [Quickstart](#quickstart)
@@ -82,23 +86,6 @@ This will effectively apply the spatialisation that Unity applies to Audio Sourc
 - **`readsf~`** does not work. This is due to a bug in pure data. At the time of writing there's a [pull request](https://github.com/pure-data/pure-data/pull/1227) that should fix it; once that's been approved I'll try and get new libpd binaries built (**anyone who can contribute OSX, Linux and/or iOS binaries please let me know!**).
 
   In the meantime, you can work around the problem by using **`soundfiler`** instead of **`readsf~`**.
-
-## Future Plans
-
-- Support for more platforms. As libpd itself is provided as a native binary, it needs to be compiled for each platform you plan to deploy to.
-  - Related to this, move to a *fat* macOS libpd library including both intel and ARM binaries. It seems apple have seamless intel emulation running under the hood, so this is not an immediate priority, but it will need done at some point.
-
-- Expand the example project.
-
-- Gallery of projects using LibPdIntegration?
-
-## Help Wanted
-
-As mentioned above, libpd has to be built separately for every platform you want to deploy to. As the sole maintainer I (Niall Moody) currently only have access to a Windows machine, and have to rely on contributions from other people in order to support other platforms.
-
-One thing I would like to do is set up a schedule for updating the repo's libpd binaries to better track libpd/pure data's own release schedules. In order to do that though, I'll need other people to step up and maintain the non-Windows platforms. This *should* be a straightforward process of just building the latest libpd every 6 months or so.
-
-If you're interested and available, please [get in touch](https://github.com/LibPdIntegration/LibPdIntegration/issues/20).
 
 ## Related Projects
 
